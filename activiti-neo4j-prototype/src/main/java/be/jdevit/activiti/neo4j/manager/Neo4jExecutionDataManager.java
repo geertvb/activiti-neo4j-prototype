@@ -5,6 +5,7 @@ import org.activiti.engine.impl.ExecutionQueryImpl;
 import org.activiti.engine.impl.Page;
 import org.activiti.engine.impl.ProcessInstanceQueryImpl;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.ExecutionDataManager;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -20,7 +21,7 @@ public class Neo4jExecutionDataManager extends AbstractNeo4jDataManager<Executio
     }
 
     public Neo4jExecutionDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(processEngineConfiguration);
+        super(ExecutionEntityImpl.class, processEngineConfiguration);
     }
 
     public ExecutionEntity findSubProcessInstanceBySuperExecutionId(String superExecutionId) {

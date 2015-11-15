@@ -4,6 +4,7 @@ import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.Page;
 import org.activiti.engine.impl.ProcessDefinitionQueryImpl;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.ProcessDefinitionDataManager;
 import org.activiti.engine.repository.ProcessDefinition;
 
@@ -16,7 +17,7 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
     }
 
     public Neo4jProcessDefinitionDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(processEngineConfiguration);
+        super(ProcessDefinitionEntityImpl.class, processEngineConfiguration);
     }
 
     public ProcessDefinitionEntity findLatestProcessDefinitionByKey(String processDefinitionKey) {

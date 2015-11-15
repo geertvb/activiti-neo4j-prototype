@@ -5,6 +5,7 @@ import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.HistoricProcessInstanceQueryImpl;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.HistoricProcessInstanceEntity;
+import org.activiti.engine.impl.persistence.entity.HistoricProcessInstanceEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.HistoricProcessInstanceDataManager;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class Neo4jHistoricProcessInstanceDataManager extends AbstractNeo4jDataMa
     }
 
     public Neo4jHistoricProcessInstanceDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(processEngineConfiguration);
+        super(HistoricProcessInstanceEntityImpl.class, processEngineConfiguration);
     }
 
     public HistoricProcessInstanceEntity create(ExecutionEntity processInstanceExecutionEntity) {

@@ -2,6 +2,7 @@ package be.jdevit.activiti.neo4j.manager;
 
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.persistence.entity.IdentityLinkEntity;
+import org.activiti.engine.impl.persistence.entity.IdentityLinkEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.IdentityLinkDataManager;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public class Neo4jIdentityLinkDataManager extends AbstractNeo4jDataManager<Ident
     }
 
     public Neo4jIdentityLinkDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(processEngineConfiguration);
+        super(IdentityLinkEntityImpl.class, processEngineConfiguration);
     }
 
     public List<IdentityLinkEntity> findIdentityLinksByTaskId(String taskId) {

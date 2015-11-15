@@ -5,6 +5,7 @@ import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.impl.HistoricActivityInstanceQueryImpl;
 import org.activiti.engine.impl.Page;
 import org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntity;
+import org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.HistoricActivityInstanceDataManager;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class Neo4jHistoricActivityInstanceDataManager extends AbstractNeo4jDataM
     }
 
     public Neo4jHistoricActivityInstanceDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(processEngineConfiguration);
+        super(HistoricActivityInstanceEntityImpl.class, processEngineConfiguration);
     }
 
     public List<HistoricActivityInstanceEntity> findUnfinishedHistoricActivityInstancesByExecutionAndActivityId(String executionId, String activityId) {

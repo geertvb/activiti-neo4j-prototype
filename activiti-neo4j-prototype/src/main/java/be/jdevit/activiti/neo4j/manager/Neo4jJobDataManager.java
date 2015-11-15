@@ -4,6 +4,7 @@ import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.JobQueryImpl;
 import org.activiti.engine.impl.Page;
 import org.activiti.engine.impl.persistence.entity.JobEntity;
+import org.activiti.engine.impl.persistence.entity.JobEntityImpl;
 import org.activiti.engine.impl.persistence.entity.MessageEntity;
 import org.activiti.engine.impl.persistence.entity.TimerEntity;
 import org.activiti.engine.impl.persistence.entity.data.JobDataManager;
@@ -18,7 +19,7 @@ public class Neo4jJobDataManager extends AbstractNeo4jDataManager<JobEntity> imp
     }
 
     public Neo4jJobDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(processEngineConfiguration);
+        super(JobEntityImpl.class, processEngineConfiguration);
     }
 
     public TimerEntity createTimer() {

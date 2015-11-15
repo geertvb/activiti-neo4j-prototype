@@ -5,6 +5,7 @@ import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.HistoricTaskInstanceQueryImpl;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.HistoricTaskInstanceEntity;
+import org.activiti.engine.impl.persistence.entity.HistoricTaskInstanceEntityImpl;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.impl.persistence.entity.data.HistoricTaskInstanceDataManager;
 
@@ -17,7 +18,7 @@ public class Neo4jHistoricTaskInstanceDataManager extends AbstractNeo4jDataManag
     }
 
     public Neo4jHistoricTaskInstanceDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(processEngineConfiguration);
+        super(HistoricTaskInstanceEntityImpl.class, processEngineConfiguration);
     }
 
     public HistoricTaskInstanceEntity create(TaskEntity task, ExecutionEntity execution) {

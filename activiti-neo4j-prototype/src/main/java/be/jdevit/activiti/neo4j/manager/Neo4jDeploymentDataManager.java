@@ -4,6 +4,7 @@ import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.DeploymentQueryImpl;
 import org.activiti.engine.impl.Page;
 import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
+import org.activiti.engine.impl.persistence.entity.DeploymentEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.DeploymentDataManager;
 import org.activiti.engine.repository.Deployment;
 
@@ -16,7 +17,7 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
     }
 
     public Neo4jDeploymentDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(processEngineConfiguration);
+        super(DeploymentEntityImpl.class, processEngineConfiguration);
     }
 
     public DeploymentEntity findLatestDeploymentByName(String deploymentName) {

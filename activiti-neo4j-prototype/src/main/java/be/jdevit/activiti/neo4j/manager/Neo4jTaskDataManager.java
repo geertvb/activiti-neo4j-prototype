@@ -3,6 +3,7 @@ package be.jdevit.activiti.neo4j.manager;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.TaskQueryImpl;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
+import org.activiti.engine.impl.persistence.entity.TaskEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.TaskDataManager;
 import org.activiti.engine.task.Task;
 
@@ -15,7 +16,7 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
     }
 
     public Neo4jTaskDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(processEngineConfiguration);
+        super(TaskEntityImpl.class, processEngineConfiguration);
     }
 
     public TaskEntity findById(String taskId, boolean checkCache) {

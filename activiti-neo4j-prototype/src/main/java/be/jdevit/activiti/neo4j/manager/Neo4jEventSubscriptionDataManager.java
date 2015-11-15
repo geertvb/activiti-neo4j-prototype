@@ -3,10 +3,7 @@ package be.jdevit.activiti.neo4j.manager;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.EventSubscriptionQueryImpl;
 import org.activiti.engine.impl.Page;
-import org.activiti.engine.impl.persistence.entity.CompensateEventSubscriptionEntity;
-import org.activiti.engine.impl.persistence.entity.EventSubscriptionEntity;
-import org.activiti.engine.impl.persistence.entity.MessageEventSubscriptionEntity;
-import org.activiti.engine.impl.persistence.entity.SignalEventSubscriptionEntity;
+import org.activiti.engine.impl.persistence.entity.*;
 import org.activiti.engine.impl.persistence.entity.data.EventSubscriptionDataManager;
 
 import java.util.List;
@@ -17,7 +14,7 @@ public class Neo4jEventSubscriptionDataManager extends AbstractNeo4jDataManager<
     }
 
     public Neo4jEventSubscriptionDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(processEngineConfiguration);
+        super(EventSubscriptionEntityImpl.class, processEngineConfiguration);
     }
 
     public MessageEventSubscriptionEntity createMessageEventSubscription() {

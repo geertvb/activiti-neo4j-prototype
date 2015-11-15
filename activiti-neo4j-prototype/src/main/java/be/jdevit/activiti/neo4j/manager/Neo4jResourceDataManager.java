@@ -2,6 +2,7 @@ package be.jdevit.activiti.neo4j.manager;
 
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.persistence.entity.ResourceEntity;
+import org.activiti.engine.impl.persistence.entity.ResourceEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.ResourceDataManager;
 
 import java.util.List;
@@ -12,7 +13,7 @@ public class Neo4jResourceDataManager extends AbstractNeo4jDataManager<ResourceE
     }
 
     public Neo4jResourceDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(processEngineConfiguration);
+        super(ResourceEntityImpl.class, processEngineConfiguration);
     }
 
     public void deleteResourcesByDeploymentId(String deploymentId) {

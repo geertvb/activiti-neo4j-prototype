@@ -2,6 +2,7 @@ package be.jdevit.activiti.neo4j.manager;
 
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.persistence.entity.VariableInstanceEntity;
+import org.activiti.engine.impl.persistence.entity.VariableInstanceEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.VariableInstanceDataManager;
 
 import java.util.Collection;
@@ -13,7 +14,7 @@ public class Neo4jVariableInstanceDataManager extends AbstractNeo4jDataManager<V
     }
 
     public Neo4jVariableInstanceDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(processEngineConfiguration);
+        super(VariableInstanceEntityImpl.class, processEngineConfiguration);
     }
 
     public List<VariableInstanceEntity> findVariableInstancesByTaskId(String taskId) {

@@ -8,15 +8,22 @@ public class AbstractNeo4jDataManager<EntityImpl extends Entity> implements Data
 
     protected ProcessEngineConfiguration processEngineConfiguration;
 
+    protected Class<? extends EntityImpl> entityClass;
+
     public AbstractNeo4jDataManager() {
     }
 
-    public AbstractNeo4jDataManager(ProcessEngineConfiguration processEngineConfiguration) {
+    public AbstractNeo4jDataManager(Class<? extends EntityImpl> entityClass, ProcessEngineConfiguration processEngineConfiguration) {
+        this.entityClass = entityClass;
         this.processEngineConfiguration = processEngineConfiguration;
     }
 
     public EntityImpl create() {
-        return null;
+        try {
+            return entityClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException("Failed to create entity " + entityClass, e);
+        }
     }
 
     public EntityImpl findById(String entityId) {
