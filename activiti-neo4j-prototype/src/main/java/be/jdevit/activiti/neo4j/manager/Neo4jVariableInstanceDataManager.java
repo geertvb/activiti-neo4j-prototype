@@ -14,7 +14,7 @@ public class Neo4jVariableInstanceDataManager extends AbstractNeo4jDataManager<V
     }
 
     public Neo4jVariableInstanceDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(VariableInstanceEntityImpl.class, processEngineConfiguration);
+        super(VariableInstanceEntityImpl.class);
     }
 
     public List<VariableInstanceEntity> findVariableInstancesByTaskId(String taskId) {

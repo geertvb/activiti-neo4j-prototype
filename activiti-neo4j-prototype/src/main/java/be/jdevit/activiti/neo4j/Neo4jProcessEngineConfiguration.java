@@ -2,9 +2,16 @@ package be.jdevit.activiti.neo4j;
 
 import be.jdevit.activiti.neo4j.manager.*;
 import be.jdevit.activiti.neo4j.transaction.NoopTransactionContextFactory;
+import org.activiti.engine.impl.cfg.IdGenerator;
 import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.activiti.engine.impl.interceptor.CommandInterceptor;
+import org.activiti.engine.impl.persistence.entity.data.DeploymentDataManager;
+import org.activiti.engine.impl.persistence.entity.data.ProcessDefinitionDataManager;
+import org.activiti.engine.impl.persistence.entity.data.ResourceDataManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Neo4jProcessEngineConfiguration extends ProcessEngineConfigurationImpl {
 
     @Override
@@ -17,6 +24,26 @@ public class Neo4jProcessEngineConfiguration extends ProcessEngineConfigurationI
         if (transactionContextFactory == null) {
             transactionContextFactory = new NoopTransactionContextFactory();
         }
+    }
+
+    @Autowired
+    protected void setNeo4jDeploymentDataManager(DeploymentDataManager neo4jDeploymentDataManager) {
+        this.deploymentDataManager = neo4jDeploymentDataManager;
+    }
+
+    @Autowired
+    protected void setNeo4jResourceDataManager(ResourceDataManager neo4jResourceDataManager) {
+        this.resourceDataManager = neo4jResourceDataManager;
+    }
+
+    @Autowired
+    protected void setNeo4jProcessDefinitionDataManager(ProcessDefinitionDataManager neo4jProcessDefinitionDataManager) {
+        this.processDefinitionDataManager = neo4jProcessDefinitionDataManager;
+    }
+
+    @Autowired
+    protected void setNeo4jIdGenerator(IdGenerator idGenerator) {
+        this.idGenerator = idGenerator;
     }
 
 //    protected void initAttachmentDataManager() {
@@ -39,7 +66,7 @@ public class Neo4jProcessEngineConfiguration extends ProcessEngineConfigurationI
 
     protected void initDeploymentDataManager() {
         if (deploymentDataManager == null) {
-            deploymentDataManager = new Neo4jDeploymentDataManager(this);
+            deploymentDataManager = new Neo4jDeploymentDataManager();
         }
     }
 
@@ -203,6 +230,10 @@ public class Neo4jProcessEngineConfiguration extends ProcessEngineConfigurationI
         initTaskDataManager();
 //        initUserDataManager();
         initVariableInstanceDataManager();
+    }
+
+    {
+        usingRelationalDatabase = false;
     }
 
 }

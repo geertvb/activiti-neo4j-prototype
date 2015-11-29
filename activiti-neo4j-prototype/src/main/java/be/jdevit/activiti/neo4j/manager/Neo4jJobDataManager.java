@@ -19,7 +19,7 @@ public class Neo4jJobDataManager extends AbstractNeo4jDataManager<JobEntity> imp
     }
 
     public Neo4jJobDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(JobEntityImpl.class, processEngineConfiguration);
+        super(JobEntityImpl.class);
     }
 
     public TimerEntity createTimer() {

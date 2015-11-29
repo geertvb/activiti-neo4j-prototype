@@ -21,7 +21,7 @@ public class Neo4jExecutionDataManager extends AbstractNeo4jDataManager<Executio
     }
 
     public Neo4jExecutionDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(ExecutionEntityImpl.class, processEngineConfiguration);
+        super(ExecutionEntityImpl.class);
     }
 
     public ExecutionEntity findSubProcessInstanceBySuperExecutionId(String superExecutionId) {

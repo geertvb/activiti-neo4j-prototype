@@ -4,6 +4,8 @@ import org.activiti.engine.*;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,6 +19,9 @@ public class Neo4jPrototypeApplication implements CommandLineRunner {
     @Autowired
     ProcessEngineConfiguration configuration;
 
+    @Autowired
+    protected GraphDatabaseService graphDatabaseService;
+
     public void run(String... args) {
         ProcessEngine processEngine = configuration.buildProcessEngine();
 
@@ -25,10 +30,18 @@ public class Neo4jPrototypeApplication implements CommandLineRunner {
         TaskService taskService = processEngine.getTaskService();
         HistoryService historyService = processEngine.getHistoryService();
 
-        Deployment deployment = repositoryService
-                .createDeployment()
-                .addClasspathResource("diagrams/oneTaskProcess.bpmn20.xml")
-                .deploy();
+        Deployment deployment;
+        Transaction tx = graphDatabaseService.beginTx();
+        try {
+            deployment = repositoryService
+                    .createDeployment()
+                    .addClasspathResource("diagrams/oneTaskProcess.bpmn20.xml")
+                    .deploy();
+
+            tx.success();
+        } finally {
+            tx.close();
+        }
 
         System.out.println("Process deployed! Deployment id is " + deployment.getId());
 

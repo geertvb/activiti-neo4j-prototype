@@ -18,7 +18,7 @@ public class Neo4jHistoricTaskInstanceDataManager extends AbstractNeo4jDataManag
     }
 
     public Neo4jHistoricTaskInstanceDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(HistoricTaskInstanceEntityImpl.class, processEngineConfiguration);
+        super(HistoricTaskInstanceEntityImpl.class);
     }
 
     public HistoricTaskInstanceEntity create(TaskEntity task, ExecutionEntity execution) {

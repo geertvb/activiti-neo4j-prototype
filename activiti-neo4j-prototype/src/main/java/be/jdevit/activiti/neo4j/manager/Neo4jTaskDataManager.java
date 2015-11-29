@@ -16,7 +16,7 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
     }
 
     public Neo4jTaskDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(TaskEntityImpl.class, processEngineConfiguration);
+        super(TaskEntityImpl.class);
     }
 
     public TaskEntity findById(String taskId, boolean checkCache) {

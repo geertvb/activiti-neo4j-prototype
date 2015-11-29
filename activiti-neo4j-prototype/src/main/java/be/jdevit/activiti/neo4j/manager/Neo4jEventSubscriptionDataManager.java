@@ -14,7 +14,7 @@ public class Neo4jEventSubscriptionDataManager extends AbstractNeo4jDataManager<
     }
 
     public Neo4jEventSubscriptionDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(EventSubscriptionEntityImpl.class, processEngineConfiguration);
+        super(EventSubscriptionEntityImpl.class);
     }
 
     public MessageEventSubscriptionEntity createMessageEventSubscription() {

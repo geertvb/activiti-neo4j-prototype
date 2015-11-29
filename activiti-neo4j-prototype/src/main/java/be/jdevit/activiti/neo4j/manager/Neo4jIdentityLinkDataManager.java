@@ -13,7 +13,7 @@ public class Neo4jIdentityLinkDataManager extends AbstractNeo4jDataManager<Ident
     }
 
     public Neo4jIdentityLinkDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(IdentityLinkEntityImpl.class, processEngineConfiguration);
+        super(IdentityLinkEntityImpl.class);
     }
 
     public List<IdentityLinkEntity> findIdentityLinksByTaskId(String taskId) {

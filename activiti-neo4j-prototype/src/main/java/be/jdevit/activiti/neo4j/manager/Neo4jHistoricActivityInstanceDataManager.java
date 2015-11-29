@@ -17,7 +17,7 @@ public class Neo4jHistoricActivityInstanceDataManager extends AbstractNeo4jDataM
     }
 
     public Neo4jHistoricActivityInstanceDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(HistoricActivityInstanceEntityImpl.class, processEngineConfiguration);
+        super(HistoricActivityInstanceEntityImpl.class);
     }
 
     public List<HistoricActivityInstanceEntity> findUnfinishedHistoricActivityInstancesByExecutionAndActivityId(String executionId, String activityId) {

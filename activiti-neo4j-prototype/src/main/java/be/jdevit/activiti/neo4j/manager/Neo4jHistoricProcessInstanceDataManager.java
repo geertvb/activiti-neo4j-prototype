@@ -17,7 +17,7 @@ public class Neo4jHistoricProcessInstanceDataManager extends AbstractNeo4jDataMa
     }
 
     public Neo4jHistoricProcessInstanceDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(HistoricProcessInstanceEntityImpl.class, processEngineConfiguration);
+        super(HistoricProcessInstanceEntityImpl.class);
     }
 
     public HistoricProcessInstanceEntity create(ExecutionEntity processInstanceExecutionEntity) {
