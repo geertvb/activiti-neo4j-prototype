@@ -8,7 +8,9 @@ import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.ProcessDefinitionDataManager;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.ResourceIterator;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,6 +27,7 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
 
     public static final String ID_ = "id";
     public static final String KEY_ = "key";
+    public static final String DEPLOYMENT_ID_ = "deploymentId";
 
     public Neo4jProcessDefinitionDataManager() {
         super(ProcessDefinitionEntityImpl.class);
@@ -48,10 +51,21 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
 //        setString(node, TENANT_ID_, processDefinitionEntity.getTenantId());
 //        setDate(node, DEPLOY_TIME_, processDefinitionEntity.getDeploymentTime());
 //        setString(node, ENGINE_VERSION_, processDefinitionEntity.getEngineVersion());
+        setString(node, DEPLOYMENT_ID_, processDefinitionEntity.getDeploymentId());
     }
 
     public ProcessDefinitionEntity findLatestProcessDefinitionByKey(String processDefinitionKey) {
-        return null;
+        ResourceIterator<Node> nodeIterator = graphDatabaseService.findNodes(DynamicLabel.label(LABEL), KEY_, processDefinitionKey);
+        if (nodeIterator.hasNext()) {
+            Node node = nodeIterator.next();
+            ProcessDefinitionEntityImpl result = new ProcessDefinitionEntityImpl();
+            result.setId((String) node.getProperty(ID_));
+            result.setKey((String) node.getProperty(KEY_));
+            result.setDeploymentId((String) node.getProperty(DEPLOYMENT_ID_));
+            return result;
+        } else {
+            return null;
+        }
     }
 
     public ProcessDefinitionEntity findLatestProcessDefinitionByKeyAndTenantId(String processDefinitionKey, String tenantId) {

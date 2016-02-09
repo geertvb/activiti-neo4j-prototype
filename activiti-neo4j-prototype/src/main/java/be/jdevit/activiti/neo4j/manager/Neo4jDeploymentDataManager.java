@@ -6,9 +6,11 @@ import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.activiti.engine.impl.persistence.entity.DeploymentEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.DeploymentDataManager;
 import org.activiti.engine.repository.Deployment;
+import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.Node;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +32,20 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
         super(DeploymentEntityImpl.class);
     }
 
+
+    @Override
+    public DeploymentEntity findById(String entityId) {
+        Node node = graphDatabaseService.findNode(DynamicLabel.label(LABEL), ID_, entityId);
+
+        DeploymentEntityImpl result = new DeploymentEntityImpl();
+        result.setId((String) node.getProperty(ID_));
+        result.setName((String) node.getProperty(NAME_, null));
+        result.setCategory((String) node.getProperty(CATEGORY_, null));
+        result.setTenantId((String) node.getProperty(TENANT_ID_, null));
+        result.setDeploymentTime(getDate(node, DEPLOY_TIME_));
+        result.setEngineVersion((String) node.getProperty(ENGINE_VERSION_, null));
+        return result;
+    }
 
     @Override
     public void insert(DeploymentEntity deploymentEntity) {

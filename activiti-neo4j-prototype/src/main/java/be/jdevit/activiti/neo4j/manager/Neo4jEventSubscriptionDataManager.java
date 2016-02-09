@@ -6,6 +6,7 @@ import org.activiti.engine.impl.Page;
 import org.activiti.engine.impl.persistence.entity.*;
 import org.activiti.engine.impl.persistence.entity.data.EventSubscriptionDataManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Neo4jEventSubscriptionDataManager extends AbstractNeo4jDataManager<EventSubscriptionEntity> implements EventSubscriptionDataManager {
@@ -70,7 +71,8 @@ public class Neo4jEventSubscriptionDataManager extends AbstractNeo4jDataManager<
     }
 
     public List<EventSubscriptionEntity> findEventSubscriptionsByConfiguration(String type, String configuration, String tenantId) {
-        return null;
+        // TODO
+        return new ArrayList<>();
     }
 
     public List<EventSubscriptionEntity> findEventSubscriptionsByName(String type, String eventName, String tenantId) {

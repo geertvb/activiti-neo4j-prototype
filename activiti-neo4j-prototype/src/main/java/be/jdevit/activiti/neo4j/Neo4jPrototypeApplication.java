@@ -6,6 +6,8 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.helpers.Function;
+import org.neo4j.helpers.TransactionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -45,7 +47,16 @@ public class Neo4jPrototypeApplication implements CommandLineRunner {
 
         System.out.println("Process deployed! Deployment id is " + deployment.getId());
 
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("oneTaskProcess");
+        ProcessInstance processInstance = new TransactionTemplate()
+                .with(graphDatabaseService)
+                .retries(1)
+                .execute(new Function<Transaction, ProcessInstance>() {
+                    @Override
+                    public ProcessInstance apply(Transaction transaction) {
+                        return runtimeService.startProcessInstanceByKey("oneTaskProcess");
+                    }
+                });
+
         List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstance.getId()).list();
         System.out.println("Got " + tasks.size() + " tasks!");
 

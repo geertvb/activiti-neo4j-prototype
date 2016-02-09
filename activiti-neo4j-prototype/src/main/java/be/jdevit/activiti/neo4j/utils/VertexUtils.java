@@ -36,7 +36,7 @@ public class VertexUtils {
     }
 
     public static Date getDate(Node node, String propertyName) {
-        Object value = node.getProperty(propertyName);
+        Object value = node.getProperty(propertyName, null);
         return DateUtils.toDate(value);
     }
 

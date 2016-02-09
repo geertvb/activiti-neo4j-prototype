@@ -5,9 +5,12 @@ import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.activiti.engine.impl.persistence.entity.ResourceEntity;
 import org.activiti.engine.impl.persistence.entity.ResourceEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.ResourceDataManager;
+import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.ResourceIterator;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static be.jdevit.activiti.neo4j.utils.VertexUtils.*;
@@ -29,6 +32,10 @@ public class Neo4jResourceDataManager extends AbstractNeo4jDataManager<ResourceE
 
     public Neo4jResourceDataManager(ProcessEngineConfiguration processEngineConfiguration) {
         super(ResourceEntityImpl.class);
+    }
+
+    public ResourceEntity findById(String entityId) {
+        return null;
     }
 
     @Override
@@ -55,6 +62,21 @@ public class Neo4jResourceDataManager extends AbstractNeo4jDataManager<ResourceE
     }
 
     public List<ResourceEntity> findResourcesByDeploymentId(String deploymentId) {
-        return null;
+        ResourceIterator<Node> nodeIterator = graphDatabaseService
+                .findNodes( DynamicLabel.label(LABEL), DEPLOYMENT_ID_, deploymentId);
+
+        List<ResourceEntity> result = new ArrayList<>();
+
+        while (nodeIterator.hasNext()) {
+            Node node = nodeIterator.next();
+            ResourceEntityImpl resourceEntity = new ResourceEntityImpl();
+            resourceEntity.setId((String) node.getProperty(ID_, null));
+            resourceEntity.setName((String) node.getProperty(NAME_, null));
+            resourceEntity.setDeploymentId((String) node.getProperty(DEPLOYMENT_ID_, null));
+            resourceEntity.setBytes((byte[]) node.getProperty(BYTES_, null));
+            resourceEntity.setGenerated((Boolean) node.getProperty(GENERATED_, null));
+            result.add(resourceEntity);
+        }
+        return result;
     }
 }
