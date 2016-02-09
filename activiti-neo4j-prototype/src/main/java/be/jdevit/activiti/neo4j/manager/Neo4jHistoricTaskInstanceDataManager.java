@@ -25,6 +25,11 @@ public class Neo4jHistoricTaskInstanceDataManager extends AbstractNeo4jDataManag
         return null;
     }
 
+    @Override
+    public List<HistoricTaskInstanceEntity> findHistoricTasksByParentTaskId(String s) {
+        return null;
+    }
+
     public List<HistoricTaskInstanceEntity> findHistoricTaskInstanceByProcessInstanceId(String processInstanceId) {
         return null;
     }
