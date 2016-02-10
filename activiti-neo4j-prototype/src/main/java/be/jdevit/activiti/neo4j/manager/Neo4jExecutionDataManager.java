@@ -9,15 +9,18 @@ import org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.ExecutionDataManager;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class Neo4jExecutionDataManager extends AbstractNeo4jDataManager<ExecutionEntity> implements ExecutionDataManager {
 
     public Neo4jExecutionDataManager() {
+        super(ExecutionEntityImpl.class);
     }
 
     public Neo4jExecutionDataManager(ProcessEngineConfiguration processEngineConfiguration) {

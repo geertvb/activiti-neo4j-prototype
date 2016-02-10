@@ -6,6 +6,7 @@ import org.activiti.engine.impl.cfg.IdGenerator;
 import org.activiti.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.activiti.engine.impl.interceptor.CommandInterceptor;
 import org.activiti.engine.impl.persistence.entity.data.DeploymentDataManager;
+import org.activiti.engine.impl.persistence.entity.data.ExecutionDataManager;
 import org.activiti.engine.impl.persistence.entity.data.ProcessDefinitionDataManager;
 import org.activiti.engine.impl.persistence.entity.data.ResourceDataManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,11 @@ public class Neo4jProcessEngineConfiguration extends ProcessEngineConfigurationI
     @Autowired
     protected void setNeo4jIdGenerator(IdGenerator idGenerator) {
         this.idGenerator = idGenerator;
+    }
+
+    @Autowired
+    protected void setNeo4jExecutionDataManager(ExecutionDataManager neo4jExecutionDataManager) {
+        this.executionDataManager = neo4jExecutionDataManager;
     }
 
 //    protected void initAttachmentDataManager() {
