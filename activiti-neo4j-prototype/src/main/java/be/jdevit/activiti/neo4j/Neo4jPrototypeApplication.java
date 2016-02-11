@@ -4,6 +4,7 @@ import org.activiti.engine.*;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.neo4j.function.Consumer;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.helpers.Function;
@@ -57,13 +58,21 @@ public class Neo4jPrototypeApplication implements CommandLineRunner {
                     }
                 });
 
-        List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstance.getId()).list();
-        System.out.println("Got " + tasks.size() + " tasks!");
+        new TransactionTemplate()
+                .with(graphDatabaseService)
+                .retries(1)
+                .execute(new Consumer<Transaction>() {
+                    @Override
+                    public void accept(Transaction transaction) {
+                        List<Task> tasks = taskService.createTaskQuery().processInstanceId(processInstance.getId()).list();
+                        System.out.println("Got " + tasks.size() + " tasks!");
+                    }
+                });
 
-        taskService.complete(tasks.get(0).getId());
-        System.out.println("Number of process instances = " + historyService.createHistoricProcessInstanceQuery().count());
-        System.out.println("Number of active process instances = " + historyService.createHistoricProcessInstanceQuery().finished().count());
-        System.out.println("Number of finished process instances = " + historyService.createHistoricProcessInstanceQuery().unfinished().count());
+//        taskService.complete(tasks.get(0).getId());
+//        System.out.println("Number of process instances = " + historyService.createHistoricProcessInstanceQuery().count());
+//        System.out.println("Number of active process instances = " + historyService.createHistoricProcessInstanceQuery().finished().count());
+//        System.out.println("Number of finished process instances = " + historyService.createHistoricProcessInstanceQuery().unfinished().count());
     }
 
     public static void main(String[] args) throws Exception {

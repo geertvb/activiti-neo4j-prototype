@@ -9,15 +9,16 @@ import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.TaskDataManager;
 import org.activiti.engine.task.Task;
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.DynamicLabel;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.*;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static be.jdevit.activiti.neo4j.utils.VertexUtils.addLabel;
+import static be.jdevit.activiti.neo4j.utils.VertexUtils.setString;
 
 @Component
 public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> implements TaskDataManager {
@@ -25,6 +26,7 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
     public static final String LABEL = "Task";
 
     public static final String ID_ = "id";
+    public static final String PROC_INST_ID_ = "processInstanceId";
 
     public Neo4jTaskDataManager() {
         super(TaskEntityImpl.class);
@@ -32,6 +34,20 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
 
     public Neo4jTaskDataManager(ProcessEngineConfiguration processEngineConfiguration) {
         super(TaskEntityImpl.class);
+    }
+
+
+    @Override
+    public void insert(TaskEntity taskEntity) {
+        if (taskEntity.getId() == null) {
+            taskEntity.setId(idGenerator.getNextId());
+        }
+
+        Node node = graphDatabaseService.createNode();
+        addLabel(node, LABEL);
+        setString(node, ID_, taskEntity.getId());
+        setString(node, PROC_INST_ID_, taskEntity.getProcessInstanceId());
+        // TODO
     }
 
     public TaskEntity findById(String taskId, boolean checkCache) {
@@ -60,7 +76,24 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
     }
 
     public List<Task> findTasksByQueryCriteria(TaskQueryImpl taskQuery) {
-        return null;
+        List<Task> result = new ArrayList<>();
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("processInstanceId", taskQuery.getProcessInstanceId());
+
+        // TODO: build query statement
+        Result r = graphDatabaseService.execute("" +
+                "MATCH (n) " +
+                "WHERE n.processInstanceId = {processInstanceId} " +
+                "RETURN n", parameters);
+
+        ResourceIterator<Node> nodes = r.columnAs("n");
+        while (nodes.hasNext()) {
+            Node node = nodes.next();
+            TaskEntityImpl task = new TaskEntityImpl();
+            task.setId((String) node.getProperty(ID_, null));
+            result.add(task);
+        }
+        return result;
     }
 
     public List<Task> findTasksAndVariablesByQueryCriteria(TaskQueryImpl taskQuery) {

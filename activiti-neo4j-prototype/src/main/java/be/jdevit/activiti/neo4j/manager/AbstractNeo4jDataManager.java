@@ -38,7 +38,7 @@ public class AbstractNeo4jDataManager<EntityImpl extends Entity> implements Data
     }
 
     public void insert(EntityImpl entity) {
-        System.out.println("insert entity = " + entity);
+        System.out.println("insert entity = " + entity + " (" + this.getClass().getSimpleName()+ ")");
     }
 
     public EntityImpl update(EntityImpl entity) {

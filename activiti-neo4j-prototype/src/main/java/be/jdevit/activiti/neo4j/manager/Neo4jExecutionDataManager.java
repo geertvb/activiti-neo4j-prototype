@@ -5,6 +5,7 @@ import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.ExecutionQueryImpl;
 import org.activiti.engine.impl.Page;
 import org.activiti.engine.impl.ProcessInstanceQueryImpl;
+import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.ExecutionDataManager;
@@ -18,12 +19,28 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+import static be.jdevit.activiti.neo4j.utils.VertexUtils.addLabel;
+import static be.jdevit.activiti.neo4j.utils.VertexUtils.setDate;
+import static be.jdevit.activiti.neo4j.utils.VertexUtils.setString;
+
 @Component
 public class Neo4jExecutionDataManager extends AbstractNeo4jDataManager<ExecutionEntity> implements ExecutionDataManager {
 
     public static final String LABEL = "Execution";
 
     public static final String ID_ = "id";
+
+    @Override
+    public void insert(ExecutionEntity executionEntity) {
+        if (executionEntity.getId() == null) {
+            executionEntity.setId(idGenerator.getNextId());
+        }
+
+        Node node = graphDatabaseService.createNode();
+        addLabel(node, LABEL);
+        setString(node, ID_, executionEntity.getId());
+        // TODO
+    }
 
     public Neo4jExecutionDataManager() {
         super(ExecutionEntityImpl.class);
