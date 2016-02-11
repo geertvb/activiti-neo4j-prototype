@@ -7,13 +7,17 @@ import org.activiti.engine.impl.Page;
 import org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntity;
 import org.activiti.engine.impl.persistence.entity.HistoricActivityInstanceEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.HistoricActivityInstanceDataManager;
+import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class Neo4jHistoricActivityInstanceDataManager extends AbstractNeo4jDataManager<HistoricActivityInstanceEntity> implements HistoricActivityInstanceDataManager {
 
     public Neo4jHistoricActivityInstanceDataManager() {
+        super(HistoricActivityInstanceEntityImpl.class);
     }
 
     public Neo4jHistoricActivityInstanceDataManager(ProcessEngineConfiguration processEngineConfiguration) {
@@ -21,7 +25,8 @@ public class Neo4jHistoricActivityInstanceDataManager extends AbstractNeo4jDataM
     }
 
     public List<HistoricActivityInstanceEntity> findUnfinishedHistoricActivityInstancesByExecutionAndActivityId(String executionId, String activityId) {
-        return null;
+        // TODO
+        return new ArrayList<>();
     }
 
     public void deleteHistoricActivityInstancesByProcessInstanceId(String historicProcessInstanceId) {

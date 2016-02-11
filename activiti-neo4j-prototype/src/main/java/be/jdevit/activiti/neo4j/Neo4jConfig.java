@@ -20,7 +20,7 @@ public class Neo4jConfig {
     @Value("classpath:config/graph.properties")
     Resource graphProperties;
 
-    @Value("C:/Temp/neo4j")
+    @Value("target/neo4j")
     File storeDir;
 
     @Bean

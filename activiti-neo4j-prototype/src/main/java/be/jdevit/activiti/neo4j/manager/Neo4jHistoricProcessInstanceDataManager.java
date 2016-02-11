@@ -21,7 +21,7 @@ public class Neo4jHistoricProcessInstanceDataManager extends AbstractNeo4jDataMa
     }
 
     public HistoricProcessInstanceEntity create(ExecutionEntity processInstanceExecutionEntity) {
-        return null;
+        return new HistoricProcessInstanceEntityImpl(processInstanceExecutionEntity);
     }
 
     public List<String> findHistoricProcessInstanceIdsByProcessDefinitionId(String processDefinitionId) {
