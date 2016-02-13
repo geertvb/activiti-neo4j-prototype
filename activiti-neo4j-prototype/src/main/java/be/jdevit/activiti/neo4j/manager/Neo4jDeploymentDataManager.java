@@ -7,10 +7,10 @@ import org.activiti.engine.impl.persistence.entity.DeploymentEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.DeploymentDataManager;
 import org.activiti.engine.repository.Deployment;
 import org.neo4j.graphdb.DynamicLabel;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +19,7 @@ import static be.jdevit.activiti.neo4j.utils.VertexUtils.*;
 @Component
 public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<DeploymentEntity> implements DeploymentDataManager {
 
-    public static final String LABEL = "Deployment";
+    public static final Label LABEL = DynamicLabel.label("Deployment");
 
     public static final String ID_ = "id";
     public static final String NAME_ = "name";
@@ -29,13 +29,18 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
     public static final String ENGINE_VERSION_ = "engineVersion";
 
     public Neo4jDeploymentDataManager() {
-        super(DeploymentEntityImpl.class);
     }
 
+    @Override
+    public DeploymentEntity create() {
+        DeploymentEntityImpl deployment = new DeploymentEntityImpl();
+        deployment.setId(idGenerator.getNextId());
+        return deployment;
+    }
 
     @Override
     public DeploymentEntity findById(String entityId) {
-        Node node = graphDatabaseService.findNode(DynamicLabel.label(LABEL), ID_, entityId);
+        Node node = graphDatabaseService.findNode(LABEL, ID_, entityId);
 
         DeploymentEntityImpl result = new DeploymentEntityImpl();
         result.setId((String) node.getProperty(ID_));
@@ -54,13 +59,28 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
         }
 
         Node node = graphDatabaseService.createNode();
-        addLabel(node, LABEL);
+        node.addLabel(LABEL);
         setString(node, ID_, deploymentEntity.getId());
         setString(node, NAME_, deploymentEntity.getName());
         setString(node, CATEGORY_, deploymentEntity.getCategory());
         setString(node, TENANT_ID_, deploymentEntity.getTenantId());
         setDate(node, DEPLOY_TIME_, deploymentEntity.getDeploymentTime());
         setString(node, ENGINE_VERSION_, deploymentEntity.getEngineVersion());
+    }
+
+    @Override
+    public DeploymentEntity update(DeploymentEntity entity) {
+        return null;
+    }
+
+    @Override
+    public void delete(String id) {
+
+    }
+
+    @Override
+    public void delete(DeploymentEntity entity) {
+
     }
 
     public DeploymentEntity findLatestDeploymentByName(String deploymentName) {

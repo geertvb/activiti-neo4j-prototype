@@ -3,8 +3,6 @@ package be.jdevit.activiti.neo4j.manager;
 import be.jdevit.activiti.neo4j.relationships.ExecutionRelationships;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.TaskQueryImpl;
-import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
-import org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.TaskDataManager;
@@ -17,25 +15,41 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static be.jdevit.activiti.neo4j.utils.VertexUtils.addLabel;
 import static be.jdevit.activiti.neo4j.utils.VertexUtils.setString;
 
 @Component
 public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> implements TaskDataManager {
 
-    public static final String LABEL = "Task";
+    public static final Label LABEL = DynamicLabel.label("Task");
 
     public static final String ID_ = "id";
     public static final String PROC_INST_ID_ = "processInstanceId";
 
     public Neo4jTaskDataManager() {
-        super(TaskEntityImpl.class);
     }
 
     public Neo4jTaskDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(TaskEntityImpl.class);
     }
 
+
+    @Override
+    public TaskEntity create() {
+        TaskEntityImpl task = new TaskEntityImpl();
+        task.setId(idGenerator.getNextId());
+        return task;
+    }
+
+    @Override
+    public TaskEntity findById(String entityId) {
+        Node node = graphDatabaseService.findNode(LABEL, ID_, entityId);
+        if (node == null) {
+            return null;
+        }
+
+        TaskEntityImpl result = new TaskEntityImpl();
+        result.setId((String) node.getProperty(ID_));
+        return result;
+    }
 
     @Override
     public void insert(TaskEntity taskEntity) {
@@ -44,10 +58,25 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
         }
 
         Node node = graphDatabaseService.createNode();
-        addLabel(node, LABEL);
+        node.addLabel(LABEL);
         setString(node, ID_, taskEntity.getId());
         setString(node, PROC_INST_ID_, taskEntity.getProcessInstanceId());
         // TODO
+    }
+
+    @Override
+    public TaskEntity update(TaskEntity entity) {
+        return null;
+    }
+
+    @Override
+    public void delete(String id) {
+
+    }
+
+    @Override
+    public void delete(TaskEntity entity) {
+
     }
 
     public TaskEntity findById(String taskId, boolean checkCache) {
@@ -56,7 +85,7 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
 
     public List<TaskEntity> findTasksByExecutionId(String executionId) {
         List<TaskEntity> result = new ArrayList<>();
-        Node executionNode = graphDatabaseService.findNode(DynamicLabel.label(LABEL), ID_, executionId);
+        Node executionNode = graphDatabaseService.findNode(LABEL, ID_, executionId);
         if (executionNode != null) {
             Iterable<Relationship> relationships = executionNode.getRelationships(Direction.OUTGOING, ExecutionRelationships.TASK);
             for (Relationship relationship : relationships) {

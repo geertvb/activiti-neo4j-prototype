@@ -9,17 +9,24 @@ import org.activiti.engine.impl.persistence.entity.MessageEntity;
 import org.activiti.engine.impl.persistence.entity.TimerEntity;
 import org.activiti.engine.impl.persistence.entity.data.JobDataManager;
 import org.activiti.engine.runtime.Job;
+import org.neo4j.graphdb.DynamicLabel;
+import org.neo4j.graphdb.Label;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
 
+@Component
 public class Neo4jJobDataManager extends AbstractNeo4jDataManager<JobEntity> implements JobDataManager {
+
+    public static final Label LABEL = DynamicLabel.label("Job");
+
+    public static final String ID_ = "id";
 
     public Neo4jJobDataManager() {
     }
 
     public Neo4jJobDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(JobEntityImpl.class);
     }
 
     public TimerEntity createTimer() {
@@ -89,4 +96,35 @@ public class Neo4jJobDataManager extends AbstractNeo4jDataManager<JobEntity> imp
     public void updateJobTenantIdForDeployment(String deploymentId, String newTenantId) {
 
     }
+
+    @Override
+    public JobEntity create() {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public JobEntity findById(String entityId) {
+        return null;
+    }
+
+    @Override
+    public void insert(JobEntity entity) {
+
+    }
+
+    @Override
+    public JobEntity update(JobEntity entity) {
+        return null;
+    }
+
+    @Override
+    public void delete(String id) {
+
+    }
+
+    @Override
+    public void delete(JobEntity entity) {
+
+    }
+
 }

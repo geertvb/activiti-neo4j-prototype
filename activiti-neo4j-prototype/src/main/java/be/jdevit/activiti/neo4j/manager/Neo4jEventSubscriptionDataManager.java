@@ -5,17 +5,27 @@ import org.activiti.engine.impl.EventSubscriptionQueryImpl;
 import org.activiti.engine.impl.Page;
 import org.activiti.engine.impl.persistence.entity.*;
 import org.activiti.engine.impl.persistence.entity.data.EventSubscriptionDataManager;
+import org.neo4j.graphdb.DynamicLabel;
+import org.neo4j.graphdb.Label;
+import org.neo4j.graphdb.Node;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static be.jdevit.activiti.neo4j.utils.VertexUtils.setString;
+
+@Component
 public class Neo4jEventSubscriptionDataManager extends AbstractNeo4jDataManager<EventSubscriptionEntity> implements EventSubscriptionDataManager {
+
+    public static final Label LABEL = DynamicLabel.label("EventSubscription");
+
+    public static final String ID_ = "id";
 
     public Neo4jEventSubscriptionDataManager() {
     }
 
     public Neo4jEventSubscriptionDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(EventSubscriptionEntityImpl.class);
     }
 
     public MessageEventSubscriptionEntity createMessageEventSubscription() {
@@ -92,6 +102,49 @@ public class Neo4jEventSubscriptionDataManager extends AbstractNeo4jDataManager<
     }
 
     public void deleteEventSubscriptionsForProcessDefinition(String processDefinitionId) {
+
+    }
+
+    @Override
+    public EventSubscriptionEntity create() {
+        EventSubscriptionEntityImpl eventSubscription=new CompensateEventSubscriptionEntityImpl();
+        eventSubscription.setId(idGenerator.getNextId());
+        return eventSubscription;
+    }
+
+    @Override
+    public EventSubscriptionEntity findById(String entityId) {
+//        Node node = graphDatabaseService.findNode(LABEL, ID_, entityId);
+//
+//        EventSubscriptionEntityImpl result = new EventSubscriptionEntityImpl();
+//        result.setId((String) node.getProperty(ID_));
+//        return result;
+        return null;
+    }
+
+    @Override
+    public void insert(EventSubscriptionEntity eventSubscription) {
+        if (eventSubscription.getId() == null) {
+            eventSubscription.setId(idGenerator.getNextId());
+        }
+
+        Node node = graphDatabaseService.createNode();
+        node.addLabel(LABEL);
+        setString(node, ID_, eventSubscription.getId());
+    }
+
+    @Override
+    public EventSubscriptionEntity update(EventSubscriptionEntity entity) {
+        return null;
+    }
+
+    @Override
+    public void delete(String id) {
+
+    }
+
+    @Override
+    public void delete(EventSubscriptionEntity entity) {
 
     }
 }

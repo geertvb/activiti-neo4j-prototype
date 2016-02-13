@@ -9,6 +9,7 @@ import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.ProcessDefinitionDataManager;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.neo4j.graphdb.DynamicLabel;
+import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.ResourceIterator;
 import org.springframework.stereotype.Component;
@@ -23,18 +24,28 @@ import static be.jdevit.activiti.neo4j.utils.VertexUtils.setString;
 @Component
 public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<ProcessDefinitionEntity> implements ProcessDefinitionDataManager {
 
-    public static final String LABEL = "Deployment";
+    public static final Label LABEL = DynamicLabel.label("ProcessDefinition");
 
     public static final String ID_ = "id";
     public static final String KEY_ = "key";
     public static final String DEPLOYMENT_ID_ = "deploymentId";
 
     public Neo4jProcessDefinitionDataManager() {
-        super(ProcessDefinitionEntityImpl.class);
     }
 
     public Neo4jProcessDefinitionDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(ProcessDefinitionEntityImpl.class);
+    }
+
+    @Override
+    public ProcessDefinitionEntity create() {
+        ProcessDefinitionEntityImpl processDefinition = new ProcessDefinitionEntityImpl();
+        processDefinition.setId(idGenerator.getNextId());
+        return processDefinition;
+    }
+
+    @Override
+    public ProcessDefinitionEntity findById(String entityId) {
+        return null;
     }
 
     public void insert(ProcessDefinitionEntity processDefinitionEntity) {
@@ -43,7 +54,7 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
         }
 
         Node node = graphDatabaseService.createNode();
-        addLabel(node, LABEL);
+        node.addLabel(LABEL);
         setString(node, ID_, processDefinitionEntity.getId());
         setString(node, KEY_, processDefinitionEntity.getKey());
 //        setString(node, NAME_, processDefinitionEntity.getName());
@@ -54,8 +65,23 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
         setString(node, DEPLOYMENT_ID_, processDefinitionEntity.getDeploymentId());
     }
 
+    @Override
+    public ProcessDefinitionEntity update(ProcessDefinitionEntity entity) {
+        return null;
+    }
+
+    @Override
+    public void delete(String id) {
+
+    }
+
+    @Override
+    public void delete(ProcessDefinitionEntity entity) {
+
+    }
+
     public ProcessDefinitionEntity findLatestProcessDefinitionByKey(String processDefinitionKey) {
-        ResourceIterator<Node> nodeIterator = graphDatabaseService.findNodes(DynamicLabel.label(LABEL), KEY_, processDefinitionKey);
+        ResourceIterator<Node> nodeIterator = graphDatabaseService.findNodes(LABEL, KEY_, processDefinitionKey);
         if (nodeIterator.hasNext()) {
             Node node = nodeIterator.next();
             ProcessDefinitionEntityImpl result = new ProcessDefinitionEntityImpl();

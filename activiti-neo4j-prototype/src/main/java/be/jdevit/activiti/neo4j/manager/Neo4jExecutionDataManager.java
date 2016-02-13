@@ -5,30 +5,40 @@ import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.ExecutionQueryImpl;
 import org.activiti.engine.impl.Page;
 import org.activiti.engine.impl.ProcessInstanceQueryImpl;
-import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.ExecutionDataManager;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.DynamicLabel;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.*;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-import static be.jdevit.activiti.neo4j.utils.VertexUtils.addLabel;
-import static be.jdevit.activiti.neo4j.utils.VertexUtils.setDate;
 import static be.jdevit.activiti.neo4j.utils.VertexUtils.setString;
 
 @Component
 public class Neo4jExecutionDataManager extends AbstractNeo4jDataManager<ExecutionEntity> implements ExecutionDataManager {
 
-    public static final String LABEL = "Execution";
+    public static final Label LABEL = DynamicLabel.label("Execution");
 
     public static final String ID_ = "id";
+
+    @Override
+    public ExecutionEntity create() {
+        ExecutionEntityImpl execution = new ExecutionEntityImpl();
+        execution.setId(idGenerator.getNextId());
+        return execution;
+    }
+
+    @Override
+    public ExecutionEntity findById(String entityId) {
+        Node node = graphDatabaseService.findNode(LABEL, ID_, entityId);
+
+        ExecutionEntityImpl result = new ExecutionEntityImpl();
+        result.setId((String) node.getProperty(ID_));
+        return result;
+    }
 
     @Override
     public void insert(ExecutionEntity executionEntity) {
@@ -37,17 +47,30 @@ public class Neo4jExecutionDataManager extends AbstractNeo4jDataManager<Executio
         }
 
         Node node = graphDatabaseService.createNode();
-        addLabel(node, LABEL);
+        node.addLabel(LABEL);
         setString(node, ID_, executionEntity.getId());
         // TODO
     }
 
+    @Override
+    public ExecutionEntity update(ExecutionEntity entity) {
+        return null;
+    }
+
+    @Override
+    public void delete(String id) {
+
+    }
+
+    @Override
+    public void delete(ExecutionEntity entity) {
+
+    }
+
     public Neo4jExecutionDataManager() {
-        super(ExecutionEntityImpl.class);
     }
 
     public Neo4jExecutionDataManager(ProcessEngineConfiguration processEngineConfiguration) {
-        super(ExecutionEntityImpl.class);
     }
 
     public ExecutionEntity findSubProcessInstanceBySuperExecutionId(String superExecutionId) {
@@ -56,7 +79,7 @@ public class Neo4jExecutionDataManager extends AbstractNeo4jDataManager<Executio
 
     public List<ExecutionEntity> findChildExecutionsByParentExecutionId(String parentExecutionId) {
         List<ExecutionEntity> result = new ArrayList<>();
-        Node parentNode = graphDatabaseService.findNode(DynamicLabel.label(LABEL), ID_, parentExecutionId);
+        Node parentNode = graphDatabaseService.findNode(LABEL, ID_, parentExecutionId);
         if (parentNode != null) {
             Iterable<Relationship> relationships = parentNode.getRelationships(Direction.OUTGOING, ExecutionRelationships.PARENT_OF);
             for (Relationship relationship : relationships) {
