@@ -9,6 +9,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static be.jdevit.activiti.neo4j.utils.VertexUtils.setString;
@@ -27,7 +28,8 @@ public class Neo4jIdentityLinkDataManager extends AbstractNeo4jDataManager<Ident
     }
 
     public List<IdentityLinkEntity> findIdentityLinksByTaskId(String taskId) {
-        return null;
+        List<IdentityLinkEntity> result  = new ArrayList<>();
+        return result;
     }
 
     public List<IdentityLinkEntity> findIdentityLinksByProcessInstanceId(String processInstanceId) {

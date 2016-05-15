@@ -78,6 +78,15 @@ public class Neo4jProcessEngineConfiguration extends ProcessEngineConfigurationI
         this.historicTaskInstanceDataManager = neo4jHistoricTaskInstanceDataManager;
     }
 
+    @Autowired
+    void setNeo4jIdentityLinkDataManager(IdentityLinkDataManager neo4jIdentityLinkDataManager) {
+        this.identityLinkDataManager = neo4jIdentityLinkDataManager;
+    }
+
+    @Autowired
+    void setNeo4jVariableInstanceDataManager(VariableInstanceDataManager neo4jVariableInstanceDataManager) {
+        this.variableInstanceDataManager = neo4jVariableInstanceDataManager;
+    }
 
     @Override
     protected void initDataManagers() {

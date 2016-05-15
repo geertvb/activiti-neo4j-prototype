@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static be.jdevit.activiti.neo4j.utils.VertexUtils.setDate;
+import static be.jdevit.activiti.neo4j.utils.VertexUtils.setInteger;
 import static be.jdevit.activiti.neo4j.utils.VertexUtils.setString;
 
 @Component
@@ -23,7 +25,24 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
     public static final Label LABEL = DynamicLabel.label("Task");
 
     public static final String ID_ = "id";
+    public static final String REV_ = "revision";
+    public static final String EXECUTION_ID_ = "executionId";
     public static final String PROC_INST_ID_ = "processInstanceId";
+    public static final String PROC_DEF_ID_ = "processDefinitionId";
+    public static final String NAME_ = "name";
+    public static final String PARENT_TASK_ID_ = "parentTaskId";
+    public static final String DESCRIPTION_ = "description";
+    public static final String TASK_DEF_KEY_ = "taskDefinitionKey";
+    public static final String OWNER_ = "owner";
+    public static final String ASSIGNEE_ = "assignee";
+    public static final String DELEGATION_ = "delegation";
+    public static final String PRIORITY_ = "priority";
+    public static final String CREATE_TIME_ = "createTime";
+    public static final String DUE_DATE_ = "dueDate";
+    public static final String CATEGORY_ = "category";
+    public static final String SUSPENSION_STATE_ = "suspensionState";
+    public static final String TENANT_ID_ = "tenantId";
+    public static final String FORM_KEY_ = "formKey";
 
     public Neo4jTaskDataManager() {
     }
@@ -60,7 +79,24 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
         Node node = graphDatabaseService.createNode();
         node.addLabel(LABEL);
         setString(node, ID_, taskEntity.getId());
+        setInteger(node, REV_, taskEntity.getRevision());
+        setString(node, EXECUTION_ID_, taskEntity.getExecutionId());
         setString(node, PROC_INST_ID_, taskEntity.getProcessInstanceId());
+        setString(node, PROC_DEF_ID_, taskEntity.getProcessDefinitionId());
+        setString(node, NAME_, taskEntity.getName());
+        setString(node, PARENT_TASK_ID_, taskEntity.getParentTaskId());
+        setString(node, DESCRIPTION_, taskEntity.getDescription());
+        setString(node, TASK_DEF_KEY_, taskEntity.getTaskDefinitionKey());
+        setString(node, OWNER_, taskEntity.getOwner());
+        setString(node, ASSIGNEE_, taskEntity.getAssignee());
+//        setString(node, DELEGATION_, taskEntity.getDelegationState());
+        setInteger(node, PRIORITY_, taskEntity.getPriority());
+        setDate(node, CREATE_TIME_, taskEntity.getCreateTime());
+        setDate(node, DUE_DATE_, taskEntity.getDueDate());
+        setString(node, CATEGORY_, taskEntity.getCategory());
+//        setString(node, SUSPENSION_STATE_, taskEntity.getSuspensionState());
+        setString(node, TENANT_ID_, taskEntity.getTenantId());
+        setString(node, FORM_KEY_, taskEntity.getFormKey());
         // TODO
     }
 
@@ -111,7 +147,7 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
 
         // TODO: build query statement
         Result r = graphDatabaseService.execute("" +
-                "MATCH (n) " +
+                "MATCH (n:Task) " +
                 "WHERE n.processInstanceId = {processInstanceId} " +
                 "RETURN n", parameters);
 
@@ -142,7 +178,8 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
     }
 
     public List<Task> findTasksByParentTaskId(String parentTaskId) {
-        return null;
+        List<Task> result = new ArrayList<>();
+        return result;
     }
 
     public void updateTaskTenantIdForDeployment(String deploymentId, String newTenantId) {

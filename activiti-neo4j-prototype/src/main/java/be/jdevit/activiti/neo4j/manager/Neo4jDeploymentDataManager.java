@@ -6,11 +6,10 @@ import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.activiti.engine.impl.persistence.entity.DeploymentEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.DeploymentDataManager;
 import org.activiti.engine.repository.Deployment;
-import org.neo4j.graphdb.DynamicLabel;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.*;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,9 +27,6 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
     public static final String DEPLOY_TIME_ = "deploymentTime";
     public static final String ENGINE_VERSION_ = "engineVersion";
 
-    public Neo4jDeploymentDataManager() {
-    }
-
     @Override
     public DeploymentEntity create() {
         DeploymentEntityImpl deployment = new DeploymentEntityImpl();
@@ -38,9 +34,10 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
         return deployment;
     }
 
-    @Override
-    public DeploymentEntity findById(String entityId) {
-        Node node = graphDatabaseService.findNode(LABEL, ID_, entityId);
+    protected DeploymentEntity node2entity(Node node) {
+        if (node == null) {
+            return null;
+        }
 
         DeploymentEntityImpl result = new DeploymentEntityImpl();
         result.setId((String) node.getProperty(ID_));
@@ -52,25 +49,60 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
         return result;
     }
 
-    @Override
-    public void insert(DeploymentEntity deploymentEntity) {
-        if (deploymentEntity.getId() == null) {
-            deploymentEntity.setId(idGenerator.getNextId());
+    protected Node entity2node(DeploymentEntity entity) {
+        if (entity == null) {
+            return null;
         }
 
         Node node = graphDatabaseService.createNode();
         node.addLabel(LABEL);
-        setString(node, ID_, deploymentEntity.getId());
-        setString(node, NAME_, deploymentEntity.getName());
-        setString(node, CATEGORY_, deploymentEntity.getCategory());
-        setString(node, TENANT_ID_, deploymentEntity.getTenantId());
-        setDate(node, DEPLOY_TIME_, deploymentEntity.getDeploymentTime());
-        setString(node, ENGINE_VERSION_, deploymentEntity.getEngineVersion());
+        entity2node(entity, node);
+        return node;
+    }
+
+    protected void entity2node(DeploymentEntity entity, Node node) {
+        setString(node, ID_, entity.getId());
+        setString(node, NAME_, entity.getName());
+        setString(node, CATEGORY_, entity.getCategory());
+        setString(node, TENANT_ID_, entity.getTenantId());
+        setDate(node, DEPLOY_TIME_, entity.getDeploymentTime());
+        setString(node, ENGINE_VERSION_, entity.getEngineVersion());
+    }
+
+    @Override
+    public DeploymentEntity findById(String entityId) {
+        if (entityId == null) {
+            return null;
+        }
+
+        Node node = graphDatabaseService.findNode(LABEL, ID_, entityId);
+        DeploymentEntity deploymentEntity = node2entity(node);
+        return deploymentEntity;
+    }
+
+    @Override
+    public void insert(DeploymentEntity deploymentEntity) {
+        if (deploymentEntity == null) {
+            return;
+        }
+
+        if (deploymentEntity.getId() == null) {
+            deploymentEntity.setId(idGenerator.getNextId());
+        }
+
+        Node node = entity2node(deploymentEntity);
     }
 
     @Override
     public DeploymentEntity update(DeploymentEntity entity) {
-        return null;
+        if (entity == null) {
+            return null;
+        }
+
+        Node node = graphDatabaseService.findNode(LABEL, ID_, entity.getId());
+        entity2node(entity, node);
+
+        return entity;
     }
 
     @Override
@@ -80,11 +112,30 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
 
     @Override
     public void delete(DeploymentEntity entity) {
-
+        graphDatabaseService.findNode(LABEL, ID_, entity.getId()).delete();
     }
 
     public DeploymentEntity findLatestDeploymentByName(String deploymentName) {
-        return null;
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("deploymentName", deploymentName);
+
+        Result result = graphDatabaseService.execute("" +
+                        "MATCH (" +
+                        "  d : Deployment {" +
+                        "    name: {deploymentName}" +
+                        "  }) " +
+                        "RETURN d " +
+                        "ORDER BY d.deploymentTime DESC " +
+                        "LIMIT 1 ",
+                parameters);
+
+        ResourceIterator<Node> deployments = result.columnAs("d");
+        if (deployments.hasNext()) {
+            Node deployment = deployments.next();
+            return node2entity(deployment);
+        } else {
+            return null;
+        }
     }
 
     public long findDeploymentCountByQueryCriteria(DeploymentQueryImpl deploymentQuery) {

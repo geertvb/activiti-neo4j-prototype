@@ -19,6 +19,14 @@ public class VertexUtils {
         setProperty(node, propertyName, propertyValue);
     }
 
+    public static void setInteger(Node node, String propertyName, Integer propertyValue) {
+        setProperty(node, propertyName, propertyValue);
+    }
+
+    public static void setLong(Node node, String propertyName, Long propertyValue) {
+        setProperty(node, propertyName, propertyValue);
+    }
+
     public static void setByteArray(Node node, String propertyName, byte[] propertyValue) {
         setProperty(node, propertyName, propertyValue);
     }

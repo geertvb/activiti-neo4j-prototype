@@ -10,6 +10,7 @@ import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,7 +28,8 @@ public class Neo4jVariableInstanceDataManager extends AbstractNeo4jDataManager<V
     }
 
     public List<VariableInstanceEntity> findVariableInstancesByTaskId(String taskId) {
-        return null;
+        List<VariableInstanceEntity> result = new ArrayList<>();
+        return result;
     }
 
     public Collection<VariableInstanceEntity> findVariableInstancesByExecutionId(String executionId) {
