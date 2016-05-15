@@ -17,9 +17,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-import static be.jdevit.activiti.neo4j.utils.VertexUtils.addLabel;
-import static be.jdevit.activiti.neo4j.utils.VertexUtils.setDate;
-import static be.jdevit.activiti.neo4j.utils.VertexUtils.setString;
+import static be.jdevit.activiti.neo4j.utils.VertexUtils.*;
 
 @Component
 public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<ProcessDefinitionEntity> implements ProcessDefinitionDataManager {
@@ -27,8 +25,20 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
     public static final Label LABEL = DynamicLabel.label("ProcessDefinition");
 
     public static final String ID_ = "id";
+    public static final String REV_ = "revision";
+    public static final String CATEGORY_ = "category";
+    public static final String NAME_ = "name";
     public static final String KEY_ = "key";
+    public static final String VERSION_ = "version";
     public static final String DEPLOYMENT_ID_ = "deploymentId";
+    public static final String RESOURCE_NAME_ = "resourceName";
+    public static final String DGRM_RESOURCE_NAME_ = "diagramResourceName";
+    public static final String DESCRIPTION_ = "description";
+    public static final String HAS_START_FORM_KEY_ = "hasStartFormKey";
+    public static final String HAS_GRAPHICAL_NOTATION_ = "hasGraphicalNotation";
+    public static final String SUSPENSION_STATE_ = "suspensionState";
+    public static final String TENANT_ID_ = "tenantId";
+    public static final String ENGINE_VERSION_ = "engineVersion";
 
     public Neo4jProcessDefinitionDataManager() {
     }
@@ -56,13 +66,20 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
         Node node = graphDatabaseService.createNode();
         node.addLabel(LABEL);
         setString(node, ID_, processDefinitionEntity.getId());
+        setInteger(node, REV_, processDefinitionEntity.getRevision());
+        setString(node, CATEGORY_, processDefinitionEntity.getCategory());
+        setString(node, NAME_, processDefinitionEntity.getName());
         setString(node, KEY_, processDefinitionEntity.getKey());
-//        setString(node, NAME_, processDefinitionEntity.getName());
-//        setString(node, CATEGORY_, processDefinitionEntity.getCategory());
-//        setString(node, TENANT_ID_, processDefinitionEntity.getTenantId());
-//        setDate(node, DEPLOY_TIME_, processDefinitionEntity.getDeploymentTime());
-//        setString(node, ENGINE_VERSION_, processDefinitionEntity.getEngineVersion());
+        setInteger(node, VERSION_, processDefinitionEntity.getVersion());
         setString(node, DEPLOYMENT_ID_, processDefinitionEntity.getDeploymentId());
+        setString(node, RESOURCE_NAME_, processDefinitionEntity.getResourceName());
+        setString(node, DGRM_RESOURCE_NAME_, processDefinitionEntity.getDiagramResourceName());
+        setString(node, DESCRIPTION_, processDefinitionEntity.getDescription());
+        setBoolean(node, HAS_START_FORM_KEY_, processDefinitionEntity.hasStartFormKey());
+        setBoolean(node, HAS_GRAPHICAL_NOTATION_, processDefinitionEntity.hasGraphicalNotation());
+        setInteger(node, SUSPENSION_STATE_, processDefinitionEntity.getSuspensionState());
+        setString(node, TENANT_ID_, processDefinitionEntity.getTenantId());
+        setString(node, ENGINE_VERSION_, processDefinitionEntity.getEngineVersion());
     }
 
     @Override
@@ -85,9 +102,20 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
         if (nodeIterator.hasNext()) {
             Node node = nodeIterator.next();
             ProcessDefinitionEntityImpl result = new ProcessDefinitionEntityImpl();
-            result.setId((String) node.getProperty(ID_));
-            result.setKey((String) node.getProperty(KEY_));
-            result.setDeploymentId((String) node.getProperty(DEPLOYMENT_ID_));
+            result.setId(getString(node, ID_));
+            result.setRevision((Integer) node.getProperty(REV_, null));
+            result.setCategory(getString(node, CATEGORY_));
+            result.setName(getString(node, NAME_));
+            result.setKey(getString(node, KEY_));
+            result.setVersion((Integer) node.getProperty(VERSION_, null));
+            result.setDeploymentId(getString(node, DEPLOYMENT_ID_));
+            result.setResourceName(getString(node, RESOURCE_NAME_));
+            result.setDiagramResourceName(getString(node, DGRM_RESOURCE_NAME_));
+            result.setDescription(getString(node, DESCRIPTION_));
+            result.setHasStartFormKey(getBoolean(node, HAS_START_FORM_KEY_));
+            result.setGraphicalNotationDefined(getBoolean(node, HAS_GRAPHICAL_NOTATION_));
+            result.setTenantId(getString(node, TENANT_ID_));
+            result.setEngineVersion(getString(node, ENGINE_VERSION_));
             return result;
         } else {
             return null;
@@ -111,6 +139,7 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
     }
 
     public ProcessDefinitionEntity findProcessDefinitionByDeploymentAndKey(String deploymentId, String processDefinitionKey) {
+// TODO
         return null;
     }
 

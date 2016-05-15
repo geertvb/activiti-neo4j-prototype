@@ -19,6 +19,10 @@ public class VertexUtils {
         setProperty(node, propertyName, propertyValue);
     }
 
+    public static String getString(Node node, String propertyName) {
+        return (String) node.getProperty(propertyName, null);
+    }
+
     public static void setInteger(Node node, String propertyName, Integer propertyValue) {
         setProperty(node, propertyName, propertyValue);
     }
@@ -33,6 +37,10 @@ public class VertexUtils {
 
     public static void setBoolean(Node node, String propertyName, boolean propertyValue) {
         setProperty(node, propertyName, propertyValue);
+    }
+
+    public static Boolean getBoolean(Node node, String propertyName) {
+        return (Boolean) node.getProperty(propertyName, null);
     }
 
     public static void setDate(Node node, String propertyName, Date propertyValue) {

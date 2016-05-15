@@ -107,7 +107,7 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
 
     @Override
     public void delete(String id) {
-
+        graphDatabaseService.findNode(LABEL, ID_, id).delete();
     }
 
     @Override
