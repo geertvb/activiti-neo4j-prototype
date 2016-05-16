@@ -8,12 +8,10 @@ import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.ProcessDefinitionDataManager;
 import org.activiti.engine.repository.ProcessDefinition;
-import org.neo4j.graphdb.DynamicLabel;
-import org.neo4j.graphdb.Label;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.ResourceIterator;
+import org.neo4j.graphdb.*;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -97,26 +95,30 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
 
     }
 
+    protected ProcessDefinitionEntity node2entity(Node node) {
+        ProcessDefinitionEntityImpl result = new ProcessDefinitionEntityImpl();
+        result.setId(getString(node, ID_));
+        result.setRevision((Integer) node.getProperty(REV_, null));
+        result.setCategory(getString(node, CATEGORY_));
+        result.setName(getString(node, NAME_));
+        result.setKey(getString(node, KEY_));
+        result.setVersion((Integer) node.getProperty(VERSION_, null));
+        result.setDeploymentId(getString(node, DEPLOYMENT_ID_));
+        result.setResourceName(getString(node, RESOURCE_NAME_));
+        result.setDiagramResourceName(getString(node, DGRM_RESOURCE_NAME_));
+        result.setDescription(getString(node, DESCRIPTION_));
+        result.setHasStartFormKey(getBoolean(node, HAS_START_FORM_KEY_));
+        result.setGraphicalNotationDefined(getBoolean(node, HAS_GRAPHICAL_NOTATION_));
+        result.setTenantId(getString(node, TENANT_ID_));
+        result.setEngineVersion(getString(node, ENGINE_VERSION_));
+        return result;
+    }
+
     public ProcessDefinitionEntity findLatestProcessDefinitionByKey(String processDefinitionKey) {
         ResourceIterator<Node> nodeIterator = graphDatabaseService.findNodes(LABEL, KEY_, processDefinitionKey);
         if (nodeIterator.hasNext()) {
             Node node = nodeIterator.next();
-            ProcessDefinitionEntityImpl result = new ProcessDefinitionEntityImpl();
-            result.setId(getString(node, ID_));
-            result.setRevision((Integer) node.getProperty(REV_, null));
-            result.setCategory(getString(node, CATEGORY_));
-            result.setName(getString(node, NAME_));
-            result.setKey(getString(node, KEY_));
-            result.setVersion((Integer) node.getProperty(VERSION_, null));
-            result.setDeploymentId(getString(node, DEPLOYMENT_ID_));
-            result.setResourceName(getString(node, RESOURCE_NAME_));
-            result.setDiagramResourceName(getString(node, DGRM_RESOURCE_NAME_));
-            result.setDescription(getString(node, DESCRIPTION_));
-            result.setHasStartFormKey(getBoolean(node, HAS_START_FORM_KEY_));
-            result.setGraphicalNotationDefined(getBoolean(node, HAS_GRAPHICAL_NOTATION_));
-            result.setTenantId(getString(node, TENANT_ID_));
-            result.setEngineVersion(getString(node, ENGINE_VERSION_));
-            return result;
+            return node2entity(node);
         } else {
             return null;
         }
@@ -140,7 +142,28 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
 
     public ProcessDefinitionEntity findProcessDefinitionByDeploymentAndKey(String deploymentId, String processDefinitionKey) {
 // TODO
-        return null;
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("deploymentId", deploymentId);
+        parameters.put("processDefinitionKey", processDefinitionKey);
+
+        Result result = graphDatabaseService.execute("" +
+                        "MATCH (" +
+                        "  d : ProcessDefinition {" +
+                        "    deploymentId: {deploymentId}," +
+                        "    key: {processDefinitionKey}" +
+                        "  }) " +
+                        "RETURN d " +
+                        "ORDER BY d.deploymentTime DESC " +
+                        "LIMIT 1 ",
+                parameters);
+
+        ResourceIterator<Node> deployments = result.columnAs("d");
+        if (deployments.hasNext()) {
+            Node deployment = deployments.next();
+            return node2entity(deployment);
+        } else {
+            return null;
+        }
     }
 
     public ProcessDefinitionEntity findProcessDefinitionByDeploymentAndKeyAndTenantId(String deploymentId, String processDefinitionKey, String tenantId) {
