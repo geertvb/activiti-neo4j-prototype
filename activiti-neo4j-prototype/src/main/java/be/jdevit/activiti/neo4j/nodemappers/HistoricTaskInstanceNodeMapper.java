@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 import static be.jdevit.activiti.neo4j.nodes.HistoricTaskInstanceNode.*;
 import static be.jdevit.activiti.neo4j.utils.VertexUtils.*;
 
-@Component("historicTaskInstanceMapper")
-public class HistoricTaskInstanceMapper extends AbstractNodeMapper<HistoricTaskInstanceEntity> {
+@Component("historicTaskInstanceNodeMapper")
+public class HistoricTaskInstanceNodeMapper extends AbstractNodeMapper<HistoricTaskInstanceEntity> {
 
     public HistoricTaskInstanceEntity newEntity() {
         return new HistoricTaskInstanceEntityImpl();

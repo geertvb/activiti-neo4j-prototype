@@ -1,6 +1,5 @@
 package be.jdevit.activiti.neo4j.manager;
 
-import be.jdevit.activiti.neo4j.nodemappers.HistoricTaskInstanceMapper;
 import be.jdevit.activiti.neo4j.nodemappers.NodeMapper;
 import be.jdevit.activiti.neo4j.nodes.HistoricTaskInstanceNode;
 import org.activiti.engine.ProcessEngineConfiguration;
@@ -11,17 +10,12 @@ import org.activiti.engine.impl.persistence.entity.HistoricTaskInstanceEntity;
 import org.activiti.engine.impl.persistence.entity.HistoricTaskInstanceEntityImpl;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.activiti.engine.impl.persistence.entity.data.HistoricTaskInstanceDataManager;
-import org.neo4j.graphdb.DynamicLabel;
-import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import static be.jdevit.activiti.neo4j.utils.VertexUtils.*;
 
 @Component
 public class Neo4jHistoricTaskInstanceDataManager extends AbstractNeo4jDataManager<HistoricTaskInstanceEntity> implements HistoricTaskInstanceDataManager {

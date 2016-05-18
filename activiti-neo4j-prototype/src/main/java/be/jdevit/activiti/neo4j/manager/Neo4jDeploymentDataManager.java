@@ -1,72 +1,36 @@
 package be.jdevit.activiti.neo4j.manager;
 
+import be.jdevit.activiti.neo4j.nodemappers.NodeMapper;
 import org.activiti.engine.impl.DeploymentQueryImpl;
 import org.activiti.engine.impl.Page;
 import org.activiti.engine.impl.persistence.entity.DeploymentEntity;
 import org.activiti.engine.impl.persistence.entity.DeploymentEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.DeploymentDataManager;
 import org.activiti.engine.repository.Deployment;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.ResourceIterator;
+import org.neo4j.graphdb.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static be.jdevit.activiti.neo4j.utils.VertexUtils.*;
+import static be.jdevit.activiti.neo4j.nodes.DeploymentNode.ID_;
+import static be.jdevit.activiti.neo4j.nodes.DeploymentNode.LABEL;
 
 @Component
 public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<DeploymentEntity> implements DeploymentDataManager {
 
-    public static final Label LABEL = DynamicLabel.label("Deployment");
-
-    public static final String ID_ = "id";
-    public static final String NAME_ = "name";
-    public static final String CATEGORY_ = "category";
-    public static final String TENANT_ID_ = "tenantId";
-    public static final String DEPLOY_TIME_ = "deploymentTime";
-    public static final String ENGINE_VERSION_ = "engineVersion";
+    @Autowired
+    protected NodeMapper<DeploymentEntity> deploymentNodeMapper;
 
     @Override
     public DeploymentEntity create() {
         DeploymentEntityImpl deployment = new DeploymentEntityImpl();
         deployment.setId(idGenerator.getNextId());
         return deployment;
-    }
-
-    protected DeploymentEntity node2entity(Node node) {
-        if (node == null) {
-            return null;
-        }
-
-        DeploymentEntityImpl result = new DeploymentEntityImpl();
-        result.setId((String) node.getProperty(ID_));
-        result.setName((String) node.getProperty(NAME_, null));
-        result.setCategory((String) node.getProperty(CATEGORY_, null));
-        result.setTenantId((String) node.getProperty(TENANT_ID_, null));
-        result.setDeploymentTime(getDate(node, DEPLOY_TIME_));
-        result.setEngineVersion((String) node.getProperty(ENGINE_VERSION_, null));
-        return result;
-    }
-
-    protected Node entity2node(DeploymentEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-
-        Node node = graphDatabaseService.createNode();
-        node.addLabel(LABEL);
-        entity2node(entity, node);
-        return node;
-    }
-
-    protected void entity2node(DeploymentEntity entity, Node node) {
-        setString(node, ID_, entity.getId());
-        setString(node, NAME_, entity.getName());
-        setString(node, CATEGORY_, entity.getCategory());
-        setString(node, TENANT_ID_, entity.getTenantId());
-        setDate(node, DEPLOY_TIME_, entity.getDeploymentTime());
-        setString(node, ENGINE_VERSION_, entity.getEngineVersion());
     }
 
     @Override
@@ -76,8 +40,7 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
         }
 
         Node node = graphDatabaseService.findNode(LABEL, ID_, entityId);
-        DeploymentEntity deploymentEntity = node2entity(node);
-        return deploymentEntity;
+        return deploymentNodeMapper.node2entity(node);
     }
 
     @Override
@@ -90,7 +53,10 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
             deploymentEntity.setId(idGenerator.getNextId());
         }
 
-        Node node = entity2node(deploymentEntity);
+        Node node = graphDatabaseService.createNode();
+        node.addLabel(LABEL);
+
+        deploymentNodeMapper.entity2node(deploymentEntity, node);
     }
 
     @Override
@@ -100,7 +66,7 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
         }
 
         Node node = graphDatabaseService.findNode(LABEL, ID_, entity.getId());
-        entity2node(entity, node);
+        deploymentNodeMapper.entity2node(entity, node);
 
         return entity;
     }
@@ -132,7 +98,7 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
         ResourceIterator<Node> deployments = result.columnAs("d");
         if (deployments.hasNext()) {
             Node deployment = deployments.next();
-            return node2entity(deployment);
+            return deploymentNodeMapper.node2entity(deployment);
         } else {
             return null;
         }

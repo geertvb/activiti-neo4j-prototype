@@ -1,6 +1,5 @@
 package be.jdevit.activiti.neo4j.nodemappers;
 
-import org.activiti.engine.impl.persistence.entity.TaskEntity;
 import org.neo4j.graphdb.Node;
 
 import java.util.List;

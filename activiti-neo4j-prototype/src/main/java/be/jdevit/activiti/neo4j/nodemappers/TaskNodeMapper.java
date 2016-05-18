@@ -7,8 +7,6 @@ import org.neo4j.graphdb.Node;
 import org.springframework.stereotype.Component;
 
 import static be.jdevit.activiti.neo4j.utils.VertexUtils.*;
-import static be.jdevit.activiti.neo4j.utils.VertexUtils.setDate;
-import static be.jdevit.activiti.neo4j.utils.VertexUtils.setString;
 
 @Component("taskNodeMapper")
 public class TaskNodeMapper extends AbstractNodeMapper<TaskEntity> {

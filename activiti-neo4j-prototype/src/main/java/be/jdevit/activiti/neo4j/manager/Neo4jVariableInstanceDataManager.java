@@ -1,7 +1,6 @@
 package be.jdevit.activiti.neo4j.manager;
 
 import org.activiti.engine.ProcessEngineConfiguration;
-import org.activiti.engine.impl.persistence.entity.TaskEntityImpl;
 import org.activiti.engine.impl.persistence.entity.VariableInstanceEntity;
 import org.activiti.engine.impl.persistence.entity.VariableInstanceEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.VariableInstanceDataManager;
