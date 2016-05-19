@@ -1,5 +1,6 @@
 package be.jdevit.activiti.neo4j.manager;
 
+import be.jdevit.activiti.neo4j.NotImplementedException;
 import be.jdevit.activiti.neo4j.nodemappers.NodeMapper;
 import be.jdevit.activiti.neo4j.nodes.HistoricTaskInstanceNode;
 import org.activiti.engine.ProcessEngineConfiguration;
@@ -35,31 +36,31 @@ public class Neo4jHistoricTaskInstanceDataManager extends AbstractNeo4jDataManag
 
     @Override
     public List<HistoricTaskInstanceEntity> findHistoricTasksByParentTaskId(String s) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<HistoricTaskInstanceEntity> findHistoricTaskInstanceByProcessInstanceId(String processInstanceId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findHistoricTaskInstanceCountByQueryCriteria(HistoricTaskInstanceQueryImpl historicTaskInstanceQuery) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     public List<HistoricTaskInstance> findHistoricTaskInstancesByQueryCriteria(HistoricTaskInstanceQueryImpl historicTaskInstanceQuery) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<HistoricTaskInstance> findHistoricTaskInstancesAndVariablesByQueryCriteria(HistoricTaskInstanceQueryImpl historicTaskInstanceQuery) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<HistoricTaskInstance> findHistoricTaskInstancesByNativeQuery(Map<String, Object> parameterMap, int firstResult, int maxResults) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findHistoricTaskInstanceCountByNativeQuery(Map<String, Object> parameterMap) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
@@ -92,16 +93,16 @@ public class Neo4jHistoricTaskInstanceDataManager extends AbstractNeo4jDataManag
 
     @Override
     public HistoricTaskInstanceEntity update(HistoricTaskInstanceEntity entity) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(String id) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(HistoricTaskInstanceEntity entity) {
-
+        throw new NotImplementedException();
     }
 }

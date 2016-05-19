@@ -1,5 +1,6 @@
 package be.jdevit.activiti.neo4j.manager;
 
+import be.jdevit.activiti.neo4j.NotImplementedException;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.persistence.entity.VariableInstanceEntity;
 import org.activiti.engine.impl.persistence.entity.VariableInstanceEntityImpl;
@@ -32,23 +33,23 @@ public class Neo4jVariableInstanceDataManager extends AbstractNeo4jDataManager<V
     }
 
     public Collection<VariableInstanceEntity> findVariableInstancesByExecutionId(String executionId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public VariableInstanceEntity findVariableInstanceByExecutionAndName(String executionId, String variableName) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<VariableInstanceEntity> findVariableInstancesByExecutionAndNames(String executionId, Collection<String> names) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public VariableInstanceEntity findVariableInstanceByTaskAndName(String taskId, String variableName) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<VariableInstanceEntity> findVariableInstancesByTaskAndNames(String taskId, Collection<String> names) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
@@ -72,21 +73,21 @@ public class Neo4jVariableInstanceDataManager extends AbstractNeo4jDataManager<V
 
     @Override
     public void insert(VariableInstanceEntity entity) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public VariableInstanceEntity update(VariableInstanceEntity entity) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(String id) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(VariableInstanceEntity entity) {
-
+        throw new NotImplementedException();
     }
 }

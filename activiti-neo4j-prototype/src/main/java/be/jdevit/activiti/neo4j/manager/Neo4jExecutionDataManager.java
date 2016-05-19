@@ -1,6 +1,7 @@
 package be.jdevit.activiti.neo4j.manager;
 
-import be.jdevit.activiti.neo4j.relationships.ExecutionRelationships;
+import be.jdevit.activiti.neo4j.NotImplementedException;
+import be.jdevit.activiti.neo4j.nodemappers.NodeMapper;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.ExecutionQueryImpl;
 import org.activiti.engine.impl.Page;
@@ -10,19 +11,22 @@ import org.activiti.engine.impl.persistence.entity.ExecutionEntityImpl;
 import org.activiti.engine.impl.persistence.entity.data.ExecutionDataManager;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.ResourceIterator;
+import org.neo4j.graphdb.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-import static be.jdevit.activiti.neo4j.utils.VertexUtils.setString;
+import static be.jdevit.activiti.neo4j.nodes.ExecutionNode.ID_;
+import static be.jdevit.activiti.neo4j.nodes.ExecutionNode.LABEL;
 
 @Component
 public class Neo4jExecutionDataManager extends AbstractNeo4jDataManager<ExecutionEntity> implements ExecutionDataManager {
 
-    public static final Label LABEL = DynamicLabel.label("Execution");
-
-    public static final String ID_ = "id";
+    @Autowired
+    protected NodeMapper<ExecutionEntity> executionNodeMapper;
 
     @Override
     public ExecutionEntity create() {
@@ -34,9 +38,7 @@ public class Neo4jExecutionDataManager extends AbstractNeo4jDataManager<Executio
     @Override
     public ExecutionEntity findById(String entityId) {
         Node node = graphDatabaseService.findNode(LABEL, ID_, entityId);
-
-        ExecutionEntityImpl result = new ExecutionEntityImpl();
-        result.setId((String) node.getProperty(ID_));
+        ExecutionEntity result = executionNodeMapper.node2entity(node);
         return result;
     }
 
@@ -48,23 +50,22 @@ public class Neo4jExecutionDataManager extends AbstractNeo4jDataManager<Executio
 
         Node node = graphDatabaseService.createNode();
         node.addLabel(LABEL);
-        setString(node, ID_, executionEntity.getId());
-        // TODO
+        executionNodeMapper.entity2node(executionEntity, node);
     }
 
     @Override
     public ExecutionEntity update(ExecutionEntity entity) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(String id) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(ExecutionEntity entity) {
-
+        throw new NotImplementedException();
     }
 
     public Neo4jExecutionDataManager() {
@@ -74,104 +75,112 @@ public class Neo4jExecutionDataManager extends AbstractNeo4jDataManager<Executio
     }
 
     public ExecutionEntity findSubProcessInstanceBySuperExecutionId(String superExecutionId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<ExecutionEntity> findChildExecutionsByParentExecutionId(String parentExecutionId) {
         List<ExecutionEntity> result = new ArrayList<>();
-        Node parentNode = graphDatabaseService.findNode(LABEL, ID_, parentExecutionId);
-        if (parentNode != null) {
-            Iterable<Relationship> relationships = parentNode.getRelationships(Direction.OUTGOING, ExecutionRelationships.PARENT_OF);
-            for (Relationship relationship : relationships) {
-                Node childNode = relationship.getEndNode();
-                ExecutionEntityImpl execution = new ExecutionEntityImpl();
-                execution.setId((String) childNode.getProperty(ID_, null));
-                // TODO
-//                execution.set
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("parentId", parentExecutionId);
+
+        Result r = graphDatabaseService.execute("" +
+                        "MATCH (" +
+                        "  d : Execution {" +
+                        "    parentId: {parentId}" +
+                        "  }) " +
+                        "RETURN d ",
+                parameters);
+
+        ResourceIterator<Node> executions = r.columnAs("d");
+
+            while (executions.hasNext()) {
+                Node node = executions.next();
+                ExecutionEntity execution = executionNodeMapper.node2entity(node);
                 result.add(execution);
             }
-        }
+
         return result;
     }
 
     public List<ExecutionEntity> findChildExecutionsByProcessInstanceId(String processInstanceId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<ExecutionEntity> findExecutionsByParentExecutionAndActivityIds(String parentExecutionId, Collection<String> activityIds) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findExecutionCountByQueryCriteria(ExecutionQueryImpl executionQuery) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     public List<ExecutionEntity> findExecutionsByQueryCriteria(ExecutionQueryImpl executionQuery, Page page) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findProcessInstanceCountByQueryCriteria(ProcessInstanceQueryImpl executionQuery) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     public List<ProcessInstance> findProcessInstanceByQueryCriteria(ProcessInstanceQueryImpl executionQuery) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<ExecutionEntity> findExecutionsByRootProcessInstanceId(String rootProcessInstanceId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<ExecutionEntity> findExecutionsByProcessInstanceId(String processInstanceId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<ProcessInstance> findProcessInstanceAndVariablesByQueryCriteria(ProcessInstanceQueryImpl executionQuery) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<ExecutionEntity> findEventScopeExecutionsByActivityId(String activityRef, String parentExecutionId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public Collection<ExecutionEntity> findInactiveExecutionsByActivityId(String activityId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public Collection<ExecutionEntity> findInactiveExecutionsByProcessInstanceId(String processInstanceId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public Collection<ExecutionEntity> findInactiveExecutionsByActivityIdAndProcessInstanceId(String activityId, String processInstanceId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<String> findProcessInstanceIdsByProcessDefinitionId(String processDefinitionId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<Execution> findExecutionsByNativeQuery(Map<String, Object> parameterMap, int firstResult, int maxResults) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<ProcessInstance> findProcessInstanceByNativeQuery(Map<String, Object> parameterMap, int firstResult, int maxResults) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findExecutionCountByNativeQuery(Map<String, Object> parameterMap) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     public void updateExecutionTenantIdForDeployment(String deploymentId, String newTenantId) {
-
+        throw new NotImplementedException();
     }
 
     public void updateProcessInstanceLockTime(String processInstanceId, Date lockDate, Date expirationTime) {
-
+        throw new NotImplementedException();
     }
 
     public void clearProcessInstanceLockTime(String processInstanceId) {
-
+        throw new NotImplementedException();
     }
 
 }

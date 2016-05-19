@@ -1,5 +1,6 @@
 package be.jdevit.activiti.neo4j.manager;
 
+import be.jdevit.activiti.neo4j.NotImplementedException;
 import be.jdevit.activiti.neo4j.nodemappers.NodeMapper;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.Page;
@@ -18,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static be.jdevit.activiti.neo4j.nodes.ProcessDefinitionNode.KEY_;
 import static be.jdevit.activiti.neo4j.nodes.ProcessDefinitionNode.LABEL;
 
 @Component
@@ -42,7 +42,7 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
 
     @Override
     public ProcessDefinitionEntity findById(String entityId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public void insert(ProcessDefinitionEntity processDefinitionEntity) {
@@ -58,23 +58,36 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
 
     @Override
     public ProcessDefinitionEntity update(ProcessDefinitionEntity entity) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(String id) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(ProcessDefinitionEntity entity) {
-
+        throw new NotImplementedException();
     }
 
     public ProcessDefinitionEntity findLatestProcessDefinitionByKey(String processDefinitionKey) {
-        ResourceIterator<Node> nodeIterator = graphDatabaseService.findNodes(LABEL, KEY_, processDefinitionKey);
-        if (nodeIterator.hasNext()) {
-            Node node = nodeIterator.next();
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("processDefinitionKey", processDefinitionKey);
+
+        Result result = graphDatabaseService.execute("" +
+                        "MATCH (" +
+                        "  d : ProcessDefinition {" +
+                        "    key: {processDefinitionKey}" +
+                        "  }) " +
+                        "RETURN d " +
+                        "ORDER BY d.version DESC " +
+                        "LIMIT 1 ",
+                parameters);
+
+        ResourceIterator<Node> deployments = result.columnAs("d");
+        if (deployments.hasNext()) {
+            Node node = deployments.next();
             return processDefinitionNodeMapper.node2entity(node);
         } else {
             return null;
@@ -82,19 +95,19 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
     }
 
     public ProcessDefinitionEntity findLatestProcessDefinitionByKeyAndTenantId(String processDefinitionKey, String tenantId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public void deleteProcessDefinitionsByDeploymentId(String deploymentId) {
-
+        throw new NotImplementedException();
     }
 
     public List<ProcessDefinition> findProcessDefinitionsByQueryCriteria(ProcessDefinitionQueryImpl processDefinitionQuery, Page page) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findProcessDefinitionCountByQueryCriteria(ProcessDefinitionQueryImpl processDefinitionQuery) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     public ProcessDefinitionEntity findProcessDefinitionByDeploymentAndKey(String deploymentId, String processDefinitionKey) {
@@ -124,26 +137,26 @@ public class Neo4jProcessDefinitionDataManager extends AbstractNeo4jDataManager<
     }
 
     public ProcessDefinitionEntity findProcessDefinitionByDeploymentAndKeyAndTenantId(String deploymentId, String processDefinitionKey, String tenantId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public ProcessDefinitionEntity findProcessDefinitionByKeyAndVersion(String processDefinitionKey, Integer processDefinitionVersion) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public ProcessDefinitionEntity findProcessDefinitionByKeyAndVersionAndTenantId(String processDefinitionKey, Integer processDefinitionVersion, String tenantId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<ProcessDefinition> findProcessDefinitionsByNativeQuery(Map<String, Object> parameterMap, int firstResult, int maxResults) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findProcessDefinitionCountByNativeQuery(Map<String, Object> parameterMap) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     public void updateProcessDefinitionTenantIdForDeployment(String deploymentId, String newTenantId) {
-
+        throw new NotImplementedException();
     }
 }

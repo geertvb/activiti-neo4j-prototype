@@ -1,5 +1,6 @@
 package be.jdevit.activiti.neo4j.manager;
 
+import be.jdevit.activiti.neo4j.NotImplementedException;
 import be.jdevit.activiti.neo4j.nodemappers.NodeMapper;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.persistence.entity.ResourceEntity;
@@ -58,25 +59,25 @@ public class Neo4jResourceDataManager extends AbstractNeo4jDataManager<ResourceE
 
     @Override
     public ResourceEntity update(ResourceEntity entity) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(String id) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(ResourceEntity entity) {
-
+        throw new NotImplementedException();
     }
 
     public void deleteResourcesByDeploymentId(String deploymentId) {
-
+        throw new NotImplementedException();
     }
 
     public ResourceEntity findResourceByDeploymentIdAndResourceName(String deploymentId, String resourceName) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<ResourceEntity> findResourcesByDeploymentId(String deploymentId) {

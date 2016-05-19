@@ -1,5 +1,6 @@
 package be.jdevit.activiti.neo4j.manager;
 
+import be.jdevit.activiti.neo4j.NotImplementedException;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.history.HistoricActivityInstance;
 import org.activiti.engine.impl.HistoricActivityInstanceQueryImpl;
@@ -33,27 +34,28 @@ public class Neo4jHistoricActivityInstanceDataManager extends AbstractNeo4jDataM
 
     public List<HistoricActivityInstanceEntity> findUnfinishedHistoricActivityInstancesByExecutionAndActivityId(String executionId, String activityId) {
         // TODO
+       // throw new NotImplementedException();
         return new ArrayList<>();
     }
 
     public void deleteHistoricActivityInstancesByProcessInstanceId(String historicProcessInstanceId) {
-
+        throw new NotImplementedException();
     }
 
     public long findHistoricActivityInstanceCountByQueryCriteria(HistoricActivityInstanceQueryImpl historicActivityInstanceQuery) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     public List<HistoricActivityInstance> findHistoricActivityInstancesByQueryCriteria(HistoricActivityInstanceQueryImpl historicActivityInstanceQuery, Page page) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<HistoricActivityInstance> findHistoricActivityInstancesByNativeQuery(Map<String, Object> parameterMap, int firstResult, int maxResults) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findHistoricActivityInstanceCountByNativeQuery(Map<String, Object> parameterMap) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
@@ -88,16 +90,16 @@ public class Neo4jHistoricActivityInstanceDataManager extends AbstractNeo4jDataM
 
     @Override
     public HistoricActivityInstanceEntity update(HistoricActivityInstanceEntity entity) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(String id) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(HistoricActivityInstanceEntity entity) {
-
+        throw new NotImplementedException();
     }
 }

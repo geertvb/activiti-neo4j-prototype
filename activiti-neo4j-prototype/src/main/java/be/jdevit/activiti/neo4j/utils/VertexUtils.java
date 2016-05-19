@@ -43,6 +43,10 @@ public class VertexUtils {
         return (Boolean) node.getProperty(propertyName, null);
     }
 
+    public static Integer getInteger(Node node, String propertyName) {
+        return (Integer) node.getProperty(propertyName, null);
+    }
+
     public static void setDate(Node node, String propertyName, Date propertyValue) {
         Long longValue = null;
         if (propertyValue != null) {

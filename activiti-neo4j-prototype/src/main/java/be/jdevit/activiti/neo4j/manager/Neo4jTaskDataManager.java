@@ -1,5 +1,6 @@
 package be.jdevit.activiti.neo4j.manager;
 
+import be.jdevit.activiti.neo4j.NotImplementedException;
 import be.jdevit.activiti.neo4j.nodemappers.NodeMapper;
 import be.jdevit.activiti.neo4j.nodes.ExecutionNode;
 import be.jdevit.activiti.neo4j.nodes.ProcessInstanceNode;
@@ -67,7 +68,8 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
 
     @Override
     public TaskEntity update(TaskEntity entity) {
-        return null;
+        // TODO: 18/05/2016
+        return entity;
     }
 
     @Override
@@ -86,7 +88,7 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
     }
 
     public TaskEntity findById(String taskId, boolean checkCache) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<TaskEntity> findTasksByExecutionId(String executionId) {
@@ -148,28 +150,29 @@ public class Neo4jTaskDataManager extends AbstractNeo4jDataManager<TaskEntity> i
     }
 
     public List<Task> findTasksAndVariablesByQueryCriteria(TaskQueryImpl taskQuery) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findTaskCountByQueryCriteria(TaskQueryImpl taskQuery) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     public List<Task> findTasksByNativeQuery(Map<String, Object> parameterMap, int firstResult, int maxResults) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findTaskCountByNativeQuery(Map<String, Object> parameterMap) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     public List<Task> findTasksByParentTaskId(String parentTaskId) {
+        //// TODO: 18/05/2016
         List<Task> result = new ArrayList<>();
         return result;
     }
 
     public void updateTaskTenantIdForDeployment(String deploymentId, String newTenantId) {
-
+        throw new NotImplementedException();
     }
 
 }

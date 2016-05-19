@@ -1,5 +1,6 @@
 package be.jdevit.activiti.neo4j.manager;
 
+import be.jdevit.activiti.neo4j.NotImplementedException;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.HistoricProcessInstanceQueryImpl;
@@ -35,31 +36,31 @@ public class Neo4jHistoricProcessInstanceDataManager extends AbstractNeo4jDataMa
     }
 
     public List<String> findHistoricProcessInstanceIdsByProcessDefinitionId(String processDefinitionId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<HistoricProcessInstanceEntity> findHistoricProcessInstancesBySuperProcessInstanceId(String superProcessInstanceId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findHistoricProcessInstanceCountByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     public List<HistoricProcessInstance> findHistoricProcessInstancesByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<HistoricProcessInstance> findHistoricProcessInstancesAndVariablesByQueryCriteria(HistoricProcessInstanceQueryImpl historicProcessInstanceQuery) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<HistoricProcessInstance> findHistoricProcessInstancesByNativeQuery(Map<String, Object> parameterMap, int firstResult, int maxResults) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findHistoricProcessInstanceCountByNativeQuery(Map<String, Object> parameterMap) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     @Override
@@ -94,16 +95,16 @@ public class Neo4jHistoricProcessInstanceDataManager extends AbstractNeo4jDataMa
 
     @Override
     public HistoricProcessInstanceEntity update(HistoricProcessInstanceEntity entity) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(String id) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(HistoricProcessInstanceEntity entity) {
-
+        throw new NotImplementedException();
     }
 }

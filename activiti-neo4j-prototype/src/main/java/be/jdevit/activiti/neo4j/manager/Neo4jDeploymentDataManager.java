@@ -1,5 +1,6 @@
 package be.jdevit.activiti.neo4j.manager;
 
+import be.jdevit.activiti.neo4j.NotImplementedException;
 import be.jdevit.activiti.neo4j.nodemappers.NodeMapper;
 import org.activiti.engine.impl.DeploymentQueryImpl;
 import org.activiti.engine.impl.Page;
@@ -105,23 +106,23 @@ public class Neo4jDeploymentDataManager extends AbstractNeo4jDataManager<Deploym
     }
 
     public long findDeploymentCountByQueryCriteria(DeploymentQueryImpl deploymentQuery) {
-        return 0;
+        throw new NotImplementedException();
     }
 
     public List<Deployment> findDeploymentsByQueryCriteria(DeploymentQueryImpl deploymentQuery, Page page) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<String> getDeploymentResourceNames(String deploymentId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<Deployment> findDeploymentsByNativeQuery(Map<String, Object> parameterMap, int firstResult, int maxResults) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public long findDeploymentCountByNativeQuery(Map<String, Object> parameterMap) {
-        return 0;
+        throw new NotImplementedException();
     }
 
 }

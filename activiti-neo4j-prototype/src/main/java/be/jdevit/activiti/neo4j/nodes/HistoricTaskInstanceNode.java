@@ -1,6 +1,5 @@
 package be.jdevit.activiti.neo4j.nodes;
 
-
 import org.neo4j.graphdb.DynamicLabel;
 import org.neo4j.graphdb.Label;
 

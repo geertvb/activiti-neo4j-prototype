@@ -1,5 +1,6 @@
 package be.jdevit.activiti.neo4j.manager;
 
+import be.jdevit.activiti.neo4j.NotImplementedException;
 import org.activiti.engine.ProcessEngineConfiguration;
 import org.activiti.engine.impl.persistence.entity.IdentityLinkEntity;
 import org.activiti.engine.impl.persistence.entity.IdentityLinkEntityImpl;
@@ -28,32 +29,33 @@ public class Neo4jIdentityLinkDataManager extends AbstractNeo4jDataManager<Ident
     }
 
     public List<IdentityLinkEntity> findIdentityLinksByTaskId(String taskId) {
+        // // TODO: 18/05/2016
         List<IdentityLinkEntity> result  = new ArrayList<>();
         return result;
     }
 
     public List<IdentityLinkEntity> findIdentityLinksByProcessInstanceId(String processInstanceId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<IdentityLinkEntity> findIdentityLinksByProcessDefinitionId(String processDefinitionId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<IdentityLinkEntity> findIdentityLinkByTaskUserGroupAndType(String taskId, String userId, String groupId, String type) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<IdentityLinkEntity> findIdentityLinkByProcessInstanceUserGroupAndType(String processInstanceId, String userId, String groupId, String type) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public List<IdentityLinkEntity> findIdentityLinkByProcessDefinitionUserAndGroup(String processDefinitionId, String userId, String groupId) {
-        return null;
+        throw new NotImplementedException();
     }
 
     public void deleteIdentityLinksByProcDef(String processDefId) {
-
+        throw new NotImplementedException();
     }
 
     @Override
@@ -88,16 +90,16 @@ public class Neo4jIdentityLinkDataManager extends AbstractNeo4jDataManager<Ident
 
     @Override
     public IdentityLinkEntity update(IdentityLinkEntity entity) {
-        return null;
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(String id) {
-
+        throw new NotImplementedException();
     }
 
     @Override
     public void delete(IdentityLinkEntity entity) {
-
+        throw new NotImplementedException();
     }
 }
